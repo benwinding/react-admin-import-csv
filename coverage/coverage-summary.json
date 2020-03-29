@@ -1,0 +1,4 @@
+{"total": {"lines":{"total":19,"covered":11,"skipped":0,"pct":57.89},"statements":{"total":21,"covered":11,"skipped":0,"pct":52.38},"functions":{"total":8,"covered":3,"skipped":0,"pct":37.5},"branches":{"total":2,"covered":0,"skipped":0,"pct":0}}
+,"/home/ben/projects/react-admin-import-csv/jest.config.js": {"lines":{"total":1,"covered":0,"skipped":0,"pct":0},"functions":{"total":0,"covered":0,"skipped":0,"pct":100},"statements":{"total":1,"covered":0,"skipped":0,"pct":0},"branches":{"total":0,"covered":0,"skipped":0,"pct":100}}
+,"/home/ben/projects/react-admin-import-csv/src/csv-extractor.ts": {"lines":{"total":18,"covered":11,"skipped":0,"pct":61.11},"functions":{"total":8,"covered":3,"skipped":0,"pct":37.5},"statements":{"total":20,"covered":11,"skipped":0,"pct":55},"branches":{"total":2,"covered":0,"skipped":0,"pct":0}}
+}

@@ -1,0 +1,44 @@
+{
+  "name": "react-admin-import-csv",
+  "version": "0.0.0",
+  "description": "CSV import button for react-admin",
+  "repository": "https://github.com/benwinding/react-admin-import-csv",
+  "homepage": "https://github.com/benwinding/react-admin-import-csv",
+  "author": "Ben Winding",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "watch": "rimraf dist && tsc -w",
+    "build": "rimraf dist && tsc",
+    "test": "jest",
+    "test:badges": "jest-coverage-badges",
+    "clean": "rimraf dist"
+  },
+  "peerDependencies": {
+    "@material-ui/core": "4.x",
+    "@material-ui/icons": "4.x",
+    "ra-core": "3.x",
+    "react": "16.x",
+    "react-redux": "7.x"
+  },
+  "dependencies": {
+    "papaparse": "4.x"
+  },
+  "devDependencies": {
+    "@types/jest": "24.0.11",
+    "@types/node": "11.12.0",
+    "@types/papaparse": "^5.0.3",
+    "@types/react": "16.8.10",
+    "@types/react-dom": "16.8.3",
+    "@types/react-redux": "^7.1.7",
+    "react": "16.8.6",
+    "react-admin": "3.3.1",
+    "react-dom": "16.8.3",
+    "react-scripts": "2.1.8",
+    "ts-jest": "^25.2.1",
+    "typescript": "3.3.4000"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts"
+}
