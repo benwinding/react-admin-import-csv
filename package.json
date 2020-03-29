@@ -7,9 +7,19 @@
   "author": "Ben Winding",
   "license": "MIT",
   "private": false,
+  "files": [
+    "*.md",
+    "lib",
+    "esm",
+    "src"
+  ],
+  "main": "lib/index",
+  "module": "esm/index.js",
   "scripts": {
-    "watch": "rimraf dist && tsc -w",
-    "build": "rimraf dist && tsc",
+    "build": "yarn run build-cjs && yarn run build-esm",
+    "build-cjs": "rimraf ./lib && tsc",
+    "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
+    "watch": "tsc --outDir esm --module es2015 --watch",
     "test": "jest",
     "test:badges": "jest-coverage-badges",
     "clean": "rimraf dist"
@@ -34,8 +44,5 @@
     "react-scripts": "2.1.8",
     "ts-jest": "^25.2.1",
     "typescript": "3.3.4000"
-  },
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "source": "src/index.ts"
+  }
 }

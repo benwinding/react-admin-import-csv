@@ -1,25 +1,18 @@
 {
   "compilerOptions": {
-    "baseUrl": "./",
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "outDir": "dist",
-    "sourceMap": true,
-    "skipLibCheck": true,
-    "declaration": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitAny": false,
+    "target": "ES5",
     "module": "commonjs",
+    "lib": ["es2017", "dom"],
+    "allowJs": true,
+    "jsx": "react",
+    "noImplicitAny": false,
     "moduleResolution": "node",
-    "jsx": "preserve"
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "outDir": "lib",
+    "rootDir": "src"
   },
-  "include": ["./src/index.ts", "./src/import-csv-button.tsx"],
-  "exclude": ["**/*.spec.ts", "dist", "node_modules/**/*"]
+  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.spec.js"],
+  "include": ["src"]
 }
