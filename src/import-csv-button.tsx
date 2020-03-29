@@ -1,25 +1,23 @@
 import React from "react";
 import Button from "@material-ui/core/Button";
 import GetAppIcon from "@material-ui/icons/GetApp";
-import { connect } from "react-redux";
-import { useDataProvider } from "ra-core";
+import { useNotify, useDataProvider } from "react-admin";
 import { processCsvFile } from "./csv-extractor";
 
-const ImportButton = (props: any) => {
+export const ImportButton = (props: any) => {
   const { resource } = props;
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const notify = useNotify();
+  const dataProvider = useDataProvider();
+
+  const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     const values = await processCsvFile(file);
-    if (!Array.isArray(values)) {
-      return;
-    }
-    const dataProvider = useDataProvider();
-    values.map(value => {
-      dataProvider
-        .create(resource, { data: value })
-        .catch(err => console.error(err));
-    });
+    console.log({ values });
+    await Promise.all(
+      values.map(value => dataProvider.create(resource, { data: value }))
+    );
+    notify("CSV Imported!");
   };
 
   return (
@@ -29,7 +27,7 @@ const ImportButton = (props: any) => {
         id="text-button-file"
         style={{ display: "none" }}
         accept=".csv"
-        onChange={handleChange}
+        onChange={onFileAdded}
       />
       <label
         htmlFor="text-button-file"
@@ -51,5 +49,3 @@ const ImportButton = (props: any) => {
     </div>
   );
 };
-
-export default connect()(ImportButton);

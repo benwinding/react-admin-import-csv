@@ -1,5 +1,9 @@
 /*
- * Public API Surface of ngx-firestate
+ * Fublic API Surface of ngx-firestate
  */
 
-export * from './import-csv-button';
+import { connect } from "react-redux";
+import { ImportButton } from "./import-csv-button";
+
+export { ImportButton };
+export default connect()(ImportButton);
