@@ -8,4 +8,4 @@
 [![Github Issues](https://img.shields.io/github/issues/benwinding/react-admin-import-csv.svg)](https://github.com/benwinding/react-admin-import-csv)
 <!-- [END badges] -->
 
-A client state-management system for firebase.
+CSV import button for react-admin.

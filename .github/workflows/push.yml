@@ -26,10 +26,10 @@ jobs:
     - name: Generate Coverage Badges
       if: github.ref == 'refs/heads/master'
       run: npm run-script test:badges
-    # - name: Publish
-    #   if: github.ref == 'refs/heads/master'
-    #   uses: benwinding/merge-release@master
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+    - name: Publish
+      if: github.ref == 'refs/heads/master'
+      uses: benwinding/merge-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
