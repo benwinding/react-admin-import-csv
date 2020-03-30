@@ -27,7 +27,8 @@
     "react-admin": "3.x"
   },
   "dependencies": {
-    "papaparse": "4.x"
+    "papaparse": "4.x",
+    "ramda": "^0.27.0"
   },
   "devDependencies": {
     "@types/jest": "24.0.11",
