@@ -36,4 +36,15 @@ describe("csv extractor", () => {
     const data = await processCsvFile(file)
     expect(data).toHaveLength(5)
   });
+
+  test("process csv data with nested object", () => {
+    const output = processCsvData([
+      ["id", "item.title"],
+      ["1", "One"],
+      ["2", "Two"]
+    ]);
+    expect(output).toHaveLength(2)
+    expect(output[0].id).toBe("1")
+    expect(output[0].item.title).toBe("One")
+  });
 });

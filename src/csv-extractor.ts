@@ -1,4 +1,11 @@
 import { parse as convertFromCSV } from "papaparse";
+import lensPath from 'ramda/src/lensPath';
+import over from 'ramda/src/over';
+
+const setObjectValue = (object: any, path: string, value: any): any => {
+  const lensPathFunction = lensPath(path.split('.'));
+  return over(lensPathFunction, () => value, (object || {}));
+};
 
 export async function processCsvFile(file: File | any) {
   if (!file) {
@@ -18,14 +25,14 @@ export async function getCsvData(file: File | any) {
   );
 }
 
-export function processCsvData(data: string[][]): Object[] {
+export function processCsvData(data: string[][]): any[] {
   const topRowKeys: string[] = data[0];
 
   const dataRows = data.slice(1).map(row => {
-    const value: any = {};
+    let value: any = {};
 
     topRowKeys.forEach((key, index) => {
-      value[key] = row[index];
+      value = setObjectValue(value, key, row[index]);
     });
 
     return value;
