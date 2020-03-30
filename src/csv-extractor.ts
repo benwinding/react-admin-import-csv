@@ -12,6 +12,7 @@ export async function getCsvData(file: File | any) {
   return new Promise<string[][]>((resolve, reject) =>
     convertFromCSV(file, {
       delimiter: ",",
+      skipEmptyLines: true,
       complete: result => resolve(result.data),
       error: error => reject(error)
     })
