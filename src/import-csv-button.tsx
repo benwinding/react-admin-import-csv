@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "@material-ui/core/Button";
+import { Button } from "react-admin";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import { useNotify, useDataProvider } from "react-admin";
 import { processCsvFile } from "./csv-extractor";
@@ -21,7 +21,7 @@ export const ImportButton = (props: any) => {
   };
 
   return (
-    <div>
+    <>
       <input
         type="file"
         id="text-button-file"
@@ -33,19 +33,10 @@ export const ImportButton = (props: any) => {
         htmlFor="text-button-file"
         style={{ display: "inline-flex", alignItems: "center" }}
       >
-        <Button color="primary" component="span">
+        <Button color="primary" component="span" label="Import">
           <GetAppIcon style={{ transform: "rotate(180deg)", fontSize: "20" }} />
-          <span
-            style={{
-              paddingLeft: "0.5em",
-              margin: "-10px 0",
-              fontSize: "0.9em"
-            }}
-          >
-            Import
-          </span>
         </Button>
       </label>
-    </div>
+    </>
   );
 };
