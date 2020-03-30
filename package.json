@@ -44,6 +44,6 @@
     "react-dom": "16.8.3",
     "react-scripts": "2.1.8",
     "ts-jest": "^25.2.1",
-    "typescript": "3.3.4000"
+    "typescript": "3.x"
   }
 }
