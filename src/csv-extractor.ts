@@ -1,23 +1,30 @@
-import { parse as convertFromCSV } from "papaparse";
-import lensPath from 'ramda/src/lensPath';
-import over from 'ramda/src/over';
+import { parse as convertFromCSV, ParseConfig } from "papaparse";
+import lensPath from "ramda/src/lensPath";
+import over from "ramda/src/over";
 
 const setObjectValue = (object: any, path: string, value: any): any => {
-  const lensPathFunction = lensPath(path.split('.'));
-  return over(lensPathFunction, () => value, (object || {}));
+  const lensPathFunction = lensPath(path.split("."));
+  return over(lensPathFunction, () => value, object || {});
 };
 
-export async function processCsvFile(file: File | any) {
+export async function processCsvFile(
+  file: File | any,
+  parseConfig: ParseConfig = {}
+) {
   if (!file) {
     return;
   }
-  const csvData = await getCsvData(file);
+  const csvData = await getCsvData(file, parseConfig);
   return processCsvData(csvData);
 }
 
-export async function getCsvData(file: File | any) {
+export async function getCsvData(
+  file: File | any,
+  parseConfig: ParseConfig = {}
+) {
   return new Promise<string[][]>((resolve, reject) =>
     convertFromCSV(file, {
+      ...parseConfig,
       delimiter: ",",
       skipEmptyLines: true,
       complete: result => resolve(result.data),

@@ -5,14 +5,14 @@ import { useNotify, useDataProvider } from "react-admin";
 import { processCsvFile } from "./csv-extractor";
 
 export const ImportButton = (props: any) => {
-  const { resource } = props;
+  const { resource, delimiter } = props;
 
   const notify = useNotify();
   const dataProvider = useDataProvider();
 
   const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    const values = await processCsvFile(file);
+    const values = await processCsvFile(file, delimiter);
     console.log({ values });
     await Promise.all(
       values.map(value => dataProvider.create(resource, { data: value }))
