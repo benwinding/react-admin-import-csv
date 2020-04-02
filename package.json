@@ -19,7 +19,8 @@
     "build": "yarn run build-cjs && yarn run build-esm",
     "build-cjs": "rimraf ./lib && tsc",
     "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
-    "test": "jest",
+    "test": "jest --collectCoverage",
+    "test:watch": "jest --watch",
     "test:badges": "jest-coverage-badges",
     "clean": "rimraf dist"
   },
