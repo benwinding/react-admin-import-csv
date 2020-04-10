@@ -1,6 +1,7 @@
 import { parse as convertFromCSV, ParseConfig } from "papaparse";
 import lensPath from "ramda/src/lensPath";
 import over from "ramda/src/over";
+import { ImportConfig } from "./config.interface";
 
 const setObjectValue = (object: any, path: string, value: any): any => {
   const lensPathFunction = lensPath(path.split("."));
@@ -20,15 +21,23 @@ export async function processCsvFile(
 
 export async function getCsvData(
   file: File | any,
-  parseConfig: ParseConfig = {}
+  inputConfig: ParseConfig = {}
 ) {
+  let config = {};
+  const isObject = !!inputConfig && typeof inputConfig === "object";
+  if (isObject) {
+    config = inputConfig;
+  }
   return new Promise<string[][]>((resolve, reject) =>
     convertFromCSV(file, {
-      ...parseConfig,
+      // Defaults
       delimiter: ",",
       skipEmptyLines: true,
-      complete: result => resolve(result.data),
-      error: error => reject(error)
+      // Configs (overwrites)
+      ...config,
+      // Callbacks
+      complete: (result) => resolve(result.data),
+      error: (error) => reject(error),
     })
   );
 }
@@ -36,7 +45,7 @@ export async function getCsvData(
 export function processCsvData(data: string[][]): any[] {
   const topRowKeys: string[] = data[0];
 
-  const dataRows = data.slice(1).map(row => {
+  const dataRows = data.slice(1).map((row) => {
     let value: any = {};
 
     topRowKeys.forEach((key, index) => {
