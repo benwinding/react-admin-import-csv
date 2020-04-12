@@ -47,4 +47,12 @@ describe("csv extractor", () => {
     expect(output[0].id).toBe("1")
     expect(output[0].item.title).toBe("One")
   });
+
+  test("process csv data with tab delimiter", async () => {
+    const file = getFile('../test-csvs/test1.tsv')
+    const output = await getCsvData(file, {
+      delimiter: '\t',
+    });
+    expect(output).toHaveLength(6)
+  });
 });

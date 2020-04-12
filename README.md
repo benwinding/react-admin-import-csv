@@ -96,3 +96,17 @@ export const PostList = props => (
   </List>
 );
 ```
+
+## Configuration Options
+
+``` typescript
+// All configurations are optional
+const config = {
+  logging?: boolean,
+  parseConfig?: {
+    // Any option from papaparse
+    // Any option from 
+  } 
+}
+<ImportButton {...props} {...config}/>
+```
