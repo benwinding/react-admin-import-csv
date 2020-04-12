@@ -5,7 +5,15 @@ import { useNotify, useDataProvider } from "react-admin";
 import { processCsvFile } from "./csv-extractor";
 
 export const ImportButton = (props: any) => {
-  const { resource, parseConfig } = props;
+  const { resource, parseConfig, logging } = props;
+  if (logging) {
+    console.log({ props });
+  }
+  if (!resource) {
+    throw new Error(
+      "the 'resource' prop was empty, did you pass in the {...props} to the ImportButton?"
+    );
+  }
 
   const notify = useNotify();
   const dataProvider = useDataProvider();
@@ -13,9 +21,11 @@ export const ImportButton = (props: any) => {
   const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     const values = await processCsvFile(file, parseConfig);
-    console.log({ values });
+    if (logging) {
+      console.log({ values });
+    }
     await Promise.all(
-      values.map(value => dataProvider.create(resource, { data: value }))
+      values.map((value) => dataProvider.create(resource, { data: value }))
     );
     notify("CSV Imported!");
   };

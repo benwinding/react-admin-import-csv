@@ -1,7 +1,6 @@
 import { parse as convertFromCSV, ParseConfig } from "papaparse";
 import lensPath from "ramda/src/lensPath";
 import over from "ramda/src/over";
-import { ImportConfig } from "./config.interface";
 
 const setObjectValue = (object: any, path: string, value: any): any => {
   const lensPathFunction = lensPath(path.split("."));
