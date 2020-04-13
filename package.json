@@ -17,7 +17,8 @@
   "module": "esm/index.js",
   "scripts": {
     "build": "yarn run build-cjs && yarn run build-esm",
-    "build-watch": "rimraf ./demo/src/build-watch && tsc -w --outDir demo/src/build-watch",
+    "build-watch": "yarn build-for-demo -w",
+    "build-for-demo": "rimraf ./demo/src/build-watch && tsc --outDir demo/src/build-watch",
     "build-cjs": "rimraf ./lib && tsc",
     "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
     "test": "jest --collectCoverage",

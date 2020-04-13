@@ -52,6 +52,8 @@ jobs:
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
     - name: Build Library
+      run: npm run-script build-for-demo
+    - name: Build Library
       run: npm run-script build
       working-directory: ./demo
     - name: Deploy 🚀
