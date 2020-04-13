@@ -5,7 +5,7 @@
     "start": "BROWSER=none PORT=4455 ../node_modules/.bin/react-scripts start",
     "build": "CI=false ../node_modules/.bin/react-scripts build && cp ./build/index.html ./build/404.html"
   },
-  "homepage": "/react-admin-import-csv",
+  "homepage": "http://benwinding.github.io/react-admin-import-csv",
   "browserslist": {
     "production": [
       ">0.2%",
