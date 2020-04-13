@@ -1,11 +1,11 @@
 {
   "name": "test-ra",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
     "start": "BROWSER=none PORT=4455 ../node_modules/.bin/react-scripts start",
-    "build": "CI=false ../node_modules/.bin/react-scripts build"
+    "build": "CI=false ../node_modules/.bin/react-scripts build && cp ./build/index.html ./build/404.html"
   },
+  "homepage": "/react-admin-import-csv",
   "browserslist": {
     "production": [
       ">0.2%",
