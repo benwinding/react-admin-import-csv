@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/static/js/main.e88ea1d9.chunk.js",
-    "main.js.map": "/static/js/main.e88ea1d9.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.b5ad7e8a.js",
-    "runtime-main.js.map": "/static/js/runtime-main.b5ad7e8a.js.map",
-    "static/js/2.4e16643a.chunk.js": "/static/js/2.4e16643a.chunk.js",
-    "static/js/2.4e16643a.chunk.js.map": "/static/js/2.4e16643a.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.78a498181e5de8fe5ecd66d39ac5cf6f.js": "/precache-manifest.78a498181e5de8fe5ecd66d39ac5cf6f.js",
-    "service-worker.js": "/service-worker.js",
-    "static/js/2.4e16643a.chunk.js.LICENSE.txt": "/static/js/2.4e16643a.chunk.js.LICENSE.txt"
+    "main.js": "/react-admin-import-csv/static/js/main.e88ea1d9.chunk.js",
+    "main.js.map": "/react-admin-import-csv/static/js/main.e88ea1d9.chunk.js.map",
+    "runtime-main.js": "/react-admin-import-csv/static/js/runtime-main.7166de54.js",
+    "runtime-main.js.map": "/react-admin-import-csv/static/js/runtime-main.7166de54.js.map",
+    "static/js/2.dcb7bcf7.chunk.js": "/react-admin-import-csv/static/js/2.dcb7bcf7.chunk.js",
+    "static/js/2.dcb7bcf7.chunk.js.map": "/react-admin-import-csv/static/js/2.dcb7bcf7.chunk.js.map",
+    "index.html": "/react-admin-import-csv/index.html",
+    "precache-manifest.f55f129f25d4f558aaede7c5258ce212.js": "/react-admin-import-csv/precache-manifest.f55f129f25d4f558aaede7c5258ce212.js",
+    "service-worker.js": "/react-admin-import-csv/service-worker.js",
+    "static/js/2.dcb7bcf7.chunk.js.LICENSE.txt": "/react-admin-import-csv/static/js/2.dcb7bcf7.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b5ad7e8a.js",
-    "static/js/2.4e16643a.chunk.js",
+    "static/js/runtime-main.7166de54.js",
+    "static/js/2.dcb7bcf7.chunk.js",
     "static/js/main.e88ea1d9.chunk.js"
   ]
 }
