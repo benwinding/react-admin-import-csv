@@ -20,7 +20,6 @@
     "build-watch": "rimraf ./demo/src/build-watch && tsc -w --outDir demo/src/build-watch",
     "build-cjs": "rimraf ./lib && tsc",
     "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
-    "start-demo": "BROWSER=none PORT=4455 react-scripts start",
     "test": "jest --collectCoverage",
     "test:watch": "jest --watch",
     "test:badges": "jest-coverage-badges",
@@ -46,9 +45,9 @@
     "react": "16.8.6",
     "react-admin": "3.x",
     "react-dom": "16.8.3",
-    "react-scripts": "1.1.5",
+    "react-scripts": "^3.4.1",
     "source-map-loader": "^0.2.4",
-    "ts-jest": "^25.2.1",
+    "ts-jest": "^24.x.x",
     "typescript": "3.x"
   }
 }

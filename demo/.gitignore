@@ -1,3 +1,5 @@
 node_modules
 yarn*
 src/build-watch
+build
+dist

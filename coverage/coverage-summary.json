@@ -1,3 +1,2 @@
-{"total": {"lines":{"total":30,"covered":28,"skipped":0,"pct":93.33},"statements":{"total":32,"covered":30,"skipped":0,"pct":93.75},"functions":{"total":10,"covered":9,"skipped":0,"pct":90},"branches":{"total":12,"covered":8,"skipped":0,"pct":66.67}}
-,"/home/ben/projects/react-admin-import-csv/src/csv-extractor.ts": {"lines":{"total":30,"covered":28,"skipped":0,"pct":93.33},"functions":{"total":10,"covered":9,"skipped":0,"pct":90},"statements":{"total":32,"covered":30,"skipped":0,"pct":93.75},"branches":{"total":12,"covered":8,"skipped":0,"pct":66.67}}
+{"total": {"lines":{"total":0,"covered":0,"skipped":0,"pct":"Unknown"},"statements":{"total":0,"covered":0,"skipped":0,"pct":"Unknown"},"functions":{"total":0,"covered":0,"skipped":0,"pct":"Unknown"},"branches":{"total":0,"covered":0,"skipped":0,"pct":"Unknown"}}
 }
