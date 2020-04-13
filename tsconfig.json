@@ -5,6 +5,7 @@
     "lib": ["es2017", "dom"],
     "allowJs": true,
     "jsx": "react",
+    "strict": false,
     "noImplicitAny": false,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
@@ -13,6 +14,6 @@
     "outDir": "lib",
     "rootDir": "src"
   },
-  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.spec.js"],
+  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.spec.js", "./demo"],
   "include": ["src"]
 }
