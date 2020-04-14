@@ -110,3 +110,23 @@ const config = {
 }
 <ImportButton {...props} {...config}/>
 ```
+
+# Development
+
+If you'd like to develop `react-admin-import-csv` do the following.
+
+## Local install
+- `git clone https://github.com/benwinding/react-admin-import-csv/`
+- `cd react-admin-import-csv`
+- `yarn`
+
+## Tests
+- `yarn test  # in root folder`
+
+## Run demo
+Open another terminal
+
+- `yarn build-watch`
+
+Open another terminal and goto the `demo` folder
+- `yarn start`
