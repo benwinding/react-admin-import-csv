@@ -10,7 +10,7 @@
 
 CSV import button for react-admin.
 
-![image](https://user-images.githubusercontent.com/11782590/77844922-0d74bc80-71f2-11ea-8c41-b0c0f7358b9b.png)
+![image](https://i.imgur.com/HeBEe3C.gif)
 
 ## Usage
 
