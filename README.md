@@ -113,7 +113,7 @@ const config = {
 
 # Development
 
-If you'd like to develop `react-admin-import-csv` do the following.
+If you'd like to develop on `react-admin-import-csv` do the following.
 
 ## Local install
 - `git clone https://github.com/benwinding/react-admin-import-csv/`
