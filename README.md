@@ -1,16 +1,16 @@
 # react-admin-import-csv
 <!-- [START badges] -->
+[![NPM Version](https://img.shields.io/npm/v/react-admin-import-csv.svg)](https://www.npmjs.com/package/react-admin-import-csv) 
+[![Downloads/week](https://img.shields.io/npm/dm/react-admin-import-csv.svg)](https://www.npmjs.com/package/react-admin-import-csv) 
+[![License](https://img.shields.io/npm/l/react-admin-import-csv.svg)](https://github.com/benwinding/react-admin-import-csv/blob/master/LICENSE) 
+[![Github Issues](https://img.shields.io/github/issues/benwinding/react-admin-import-csv.svg)](https://github.com/benwinding/react-admin-import-csv)
 ![Build and Publish](https://github.com/benwinding/react-admin-import-csv/workflows/Build%20and%20Publish/badge.svg)
 [![Code Coverage](https://raw.githubusercontent.com/benwinding/react-admin-import-csv/master/coverage/badge-lines.svg?sanitize=true)](./coverage/coverage-summary.json)
-[![NPM Version](https://img.shields.io/npm/v/react-admin-import-csv.svg)](https://www.npmjs.com/package/react-admin-import-csv) 
-[![License](https://img.shields.io/npm/l/react-admin-import-csv.svg)](https://github.com/benwinding/react-admin-import-csv/blob/master/LICENSE) 
-[![Downloads/week](https://img.shields.io/npm/dm/react-admin-import-csv.svg)](https://www.npmjs.com/package/react-admin-import-csv) 
-[![Github Issues](https://img.shields.io/github/issues/benwinding/react-admin-import-csv.svg)](https://github.com/benwinding/react-admin-import-csv)
 <!-- [END badges] -->
 
 CSV import button for react-admin.
 
-![image](https://user-images.githubusercontent.com/11782590/77844922-0d74bc80-71f2-11ea-8c41-b0c0f7358b9b.png)
+![image](https://i.imgur.com/HeBEe3C.gif)
 
 ## Usage
 
@@ -110,3 +110,23 @@ const config = {
 }
 <ImportButton {...props} {...config}/>
 ```
+
+# Development
+
+If you'd like to develop `react-admin-import-csv` do the following.
+
+## Local install
+- `git clone https://github.com/benwinding/react-admin-import-csv/`
+- `cd react-admin-import-csv`
+- `yarn`
+
+## Tests
+- `yarn test  # in root folder`
+
+## Run demo
+Open another terminal
+
+- `yarn build-watch`
+
+Open another terminal and goto the `demo` folder
+- `yarn start`
