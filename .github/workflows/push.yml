@@ -33,7 +33,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-    - uses: fastlane/github-action/communicate-on-pull-request-merged@latest
+    - uses: fastlane/github-actions/communicate-on-pull-request-merged@master
       if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
