@@ -1,4 +1,5 @@
-on: push
+on: pull_request
+
 name: Build and Publish
 jobs:
   build:
@@ -26,8 +27,8 @@ jobs:
     - name: Generate Coverage Badges
       if: github.ref == 'refs/heads/master'
       run: npm run-script test:badges
-    - name: Publish
-      if: github.ref == 'refs/heads/master'
+    - name: Publish to npm 🚀
+      if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
       uses: benwinding/merge-release@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +58,7 @@ jobs:
       run: npm run-script build
       working-directory: ./demo
     - name: Deploy 🚀
+      if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
