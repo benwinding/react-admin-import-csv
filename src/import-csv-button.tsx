@@ -14,6 +14,7 @@ import {
 
 export const ImportButton = (props: any) => {
   const { resource, parseConfig, logging } = props;
+  
   if (logging) {
     console.log({ props });
   }
@@ -21,6 +22,19 @@ export const ImportButton = (props: any) => {
     throw new Error(
       "the 'resource' prop was empty, did you pass in the {...props} to the ImportButton?"
     );
+  }
+  
+  let { variant, label, resourceName } = props
+  if(!label){
+    label = "Import";
+  }
+
+  if (!variant){
+    variant = "text";
+  }  
+
+  if (!resourceName){
+    resourceName = resource;
   }
 
   const [open, setOpen] = React.useState(false);
@@ -90,7 +104,8 @@ export const ImportButton = (props: any) => {
       <RAButton
         color="primary"
         component="span"
-        label="Import"
+        variant={variant}
+        label={label}
         onClick={openImportDialog}
       >
         <GetAppIcon style={{ transform: "rotate(180deg)", fontSize: "20" }} />
@@ -102,7 +117,7 @@ export const ImportButton = (props: any) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Import to "{resource}"
+          Import to "{resourceName}"
         </DialogTitle>
         <DialogContent>
           <div
