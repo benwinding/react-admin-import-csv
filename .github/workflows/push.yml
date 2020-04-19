@@ -1,5 +1,4 @@
-on: pull_request
-
+on: push
 name: Build and Publish
 jobs:
   build:
@@ -27,17 +26,12 @@ jobs:
     - name: Generate Coverage Badges
       if: github.ref == 'refs/heads/master'
       run: npm run-script test:badges
-    - name: Publish to npm 🚀
-      if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+    - name: Deploy to NPM! 🚀
+      if: github.ref == 'refs/heads/master'
       uses: benwinding/merge-release@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-    - uses: fastlane/github-actions/communicate-on-pull-request-merged@master
-      if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        pr-comment: "Deployed to npm! https://www.npmjs.com/package/react-admin-import-csv"
 
   demo:
     name: Build Demo
@@ -59,14 +53,13 @@ jobs:
       run: npm install
     - name: Build Library
       run: npm run-script build-for-demo
-    - name: Build Library
+    - name: Build Demo
       run: npm run-script build
       working-directory: ./demo
     - name: Deploy 🚀
-      if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
+      if: github.ref == 'refs/heads/master'
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages # The branch the action should deploy to.
         FOLDER: demo/build # The folder the action should deploy.
-
