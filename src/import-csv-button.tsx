@@ -4,8 +4,10 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import { useNotify, useDataProvider } from "react-admin";
 import { processCsvFile } from "./csv-extractor";
 
-import englishMessages from './i18n/en'
-import spanishMessages from './i18n/es'
+import englishMessages from 'ra-language-english';
+import spanishMessages from 'ra-language-spanish';
+
+import * as domainMessages from './i18n';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 
 import {
@@ -17,11 +19,12 @@ import {
 } from "@material-ui/core";
 
 export const ImportButton = (props: any) => {
+
   const messages = {
-    en: englishMessages,
-    es: spanishMessages
+    es: { ...spanishMessages, ...domainMessages.es },
+    en: { ...englishMessages, ...domainMessages.en },
   };
-  
+    
   const i18nProvider = polyglotI18nProvider(
     locale => messages[locale] ? messages[locale] : messages.en,
     resolveBrowserLocale()
