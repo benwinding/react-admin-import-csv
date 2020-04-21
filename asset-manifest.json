@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/react-admin-import-csv/static/js/main.e88ea1d9.chunk.js",
-    "main.js.map": "/react-admin-import-csv/static/js/main.e88ea1d9.chunk.js.map",
+    "main.js": "/react-admin-import-csv/static/js/main.b166445a.chunk.js",
+    "main.js.map": "/react-admin-import-csv/static/js/main.b166445a.chunk.js.map",
     "runtime-main.js": "/react-admin-import-csv/static/js/runtime-main.7166de54.js",
     "runtime-main.js.map": "/react-admin-import-csv/static/js/runtime-main.7166de54.js.map",
-    "static/js/2.dcb7bcf7.chunk.js": "/react-admin-import-csv/static/js/2.dcb7bcf7.chunk.js",
-    "static/js/2.dcb7bcf7.chunk.js.map": "/react-admin-import-csv/static/js/2.dcb7bcf7.chunk.js.map",
+    "static/js/2.0d93bf22.chunk.js": "/react-admin-import-csv/static/js/2.0d93bf22.chunk.js",
+    "static/js/2.0d93bf22.chunk.js.map": "/react-admin-import-csv/static/js/2.0d93bf22.chunk.js.map",
     "index.html": "/react-admin-import-csv/index.html",
-    "precache-manifest.f55f129f25d4f558aaede7c5258ce212.js": "/react-admin-import-csv/precache-manifest.f55f129f25d4f558aaede7c5258ce212.js",
+    "precache-manifest.933219dc535cec7b7fda84ce5aac7b05.js": "/react-admin-import-csv/precache-manifest.933219dc535cec7b7fda84ce5aac7b05.js",
     "service-worker.js": "/react-admin-import-csv/service-worker.js",
-    "static/js/2.dcb7bcf7.chunk.js.LICENSE.txt": "/react-admin-import-csv/static/js/2.dcb7bcf7.chunk.js.LICENSE.txt"
+    "static/js/2.0d93bf22.chunk.js.LICENSE.txt": "/react-admin-import-csv/static/js/2.0d93bf22.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.7166de54.js",
-    "static/js/2.dcb7bcf7.chunk.js",
-    "static/js/main.e88ea1d9.chunk.js"
+    "static/js/2.0d93bf22.chunk.js",
+    "static/js/main.b166445a.chunk.js"
   ]
 }
