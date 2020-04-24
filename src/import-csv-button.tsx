@@ -30,7 +30,7 @@ export const ImportButton = (props: any) => {
     resolveBrowserLocale()
   );
 
-  const { resource, parseConfig, logging } = props;
+  const { resource, parseConfig, logging, preCommitCallback } = props;
 
   if (logging) {
     console.log({ props });
@@ -39,7 +39,7 @@ export const ImportButton = (props: any) => {
     throw new Error(i18nProvider.translate('csv.error.emptyResource'));
   }
 
-  let { variant, label, resourceName, preCommitCallback } = props;
+  let { variant, label, resourceName } = props;
   if (!label) {
     label = i18nProvider.translate('csv.main.import');
   }
@@ -100,7 +100,7 @@ export const ImportButton = (props: any) => {
       if (values.some((v) => !v.id)) {
         throw new Error(i18nProvider.translate('csv.error.noId'));
       }
-      if (preCommitCallback) setValues(preCommitCallback(values));
+      if (preCommitCallback) setValues(preCommitCallback('overwrite', values));
       Promise.all(
         values.map((value) => dataProvider.update(resource, { id: value.id, data: value }))
       ).then(() => {
