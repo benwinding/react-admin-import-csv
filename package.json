@@ -27,12 +27,12 @@
     "clean": "rimraf dist"
   },
   "peerDependencies": {
-    "react-admin": "3.x",
-    "ra-language-spanish": "1.x"
+    "react-admin": "3.x"
   },
   "dependencies": {
     "papaparse": "4.x",
-    "ramda": "^0.27.0"
+    "ramda": "^0.27.0",
+    "ra-language-spanish": "1.x"
   },
   "devDependencies": {
     "@types/jest": "24.0.11",
