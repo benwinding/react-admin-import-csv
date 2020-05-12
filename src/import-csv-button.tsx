@@ -84,11 +84,8 @@ export const ImportButton = (props: any) => {
         throw new Error(i18nProvider.translate('csv.error.hasId'));
       }
       if (preCommitCallback) setValues(preCommitCallback('create', values));
-      Promise.all(values.map((value) => dataProvider.create(resource, { data: value }))).then(
-        () => {
-          handleComplete();
-        }
-      );
+      await Promise.all(values.map((value) => dataProvider.create(resource, { data: value })));
+      handleComplete();
     } catch (error) {
       handleComplete(error);
     }
