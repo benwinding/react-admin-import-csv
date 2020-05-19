@@ -17,7 +17,7 @@ export default {
       importTo: 'Importar para',
       dataFileReq: 'Requisitos del archivo',
       extension: "Debe ser un archivo '.csv' o '.tsv'",
-      idColumCreate: "No debe contener una columna 'id' para nuevo",
+      idColumnCreate: "No debe contener una columna 'id' para nuevo",
       idColumnUpdate: "Debe contener una columna 'id' para sobrescribir",
       chooseFile: 'Elija Archivo',
       processed: 'Procesado',
