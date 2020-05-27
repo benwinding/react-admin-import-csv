@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button as RAButton, resolveBrowserLocale } from 'react-admin';
+import { Button as RAButton, resolveBrowserLocale, useRefresh } from 'react-admin';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { useNotify, useDataProvider } from 'react-admin';
 import { processCsvFile } from './csv-extractor';
@@ -57,6 +57,7 @@ export const ImportButton = (props: any) => {
   const [fileName, setFileName] = React.useState(null as string);
   const [values, setValues] = React.useState(null as any[]);
   const [errorTxt, setErrorTxt] = React.useState(null as string);
+  const refresh = useRefresh();
 
   const openImportDialog = () => {
     setOpen(true);
@@ -71,7 +72,10 @@ export const ImportButton = (props: any) => {
 
   const handleComplete = (error = false) => {
     handleClose();
-    if (!error) notify(`${i18nProvider.translate('csv.alert.imported')} ${fileName}`);
+    if (!error) {
+      notify(`${i18nProvider.translate('csv.alert.imported')} ${fileName}`);
+      refresh();
+    }
     if (error) {
       notify(`${i18nProvider.translate('csv.error.importing')} ${fileName}, ${error}`, 'error');
     }
