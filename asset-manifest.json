@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.js": "/react-admin-import-csv/static/js/main.33580fec.chunk.js",
-    "main.js.map": "/react-admin-import-csv/static/js/main.33580fec.chunk.js.map",
-    "runtime-main.js": "/react-admin-import-csv/static/js/runtime-main.b62b16da.js",
-    "runtime-main.js.map": "/react-admin-import-csv/static/js/runtime-main.b62b16da.js.map",
-    "static/js/2.67af0141.chunk.js": "/react-admin-import-csv/static/js/2.67af0141.chunk.js",
-    "static/js/2.67af0141.chunk.js.map": "/react-admin-import-csv/static/js/2.67af0141.chunk.js.map",
+    "main.js": "/react-admin-import-csv/static/js/main.7fc4c355.chunk.js",
+    "main.js.map": "/react-admin-import-csv/static/js/main.7fc4c355.chunk.js.map",
+    "runtime-main.js": "/react-admin-import-csv/static/js/runtime-main.f4467237.js",
+    "runtime-main.js.map": "/react-admin-import-csv/static/js/runtime-main.f4467237.js.map",
+    "static/js/2.9c0086ce.chunk.js": "/react-admin-import-csv/static/js/2.9c0086ce.chunk.js",
+    "static/js/2.9c0086ce.chunk.js.map": "/react-admin-import-csv/static/js/2.9c0086ce.chunk.js.map",
     "index.html": "/react-admin-import-csv/index.html",
-    "precache-manifest.a3b0a279b75072011c48eb30b74d04cc.js": "/react-admin-import-csv/precache-manifest.a3b0a279b75072011c48eb30b74d04cc.js",
+    "precache-manifest.0f2c4bf9e41107d923f7c20cd58d6f07.js": "/react-admin-import-csv/precache-manifest.0f2c4bf9e41107d923f7c20cd58d6f07.js",
     "service-worker.js": "/react-admin-import-csv/service-worker.js",
-    "static/js/2.67af0141.chunk.js.LICENSE.txt": "/react-admin-import-csv/static/js/2.67af0141.chunk.js.LICENSE.txt"
+    "static/js/2.9c0086ce.chunk.js.LICENSE.txt": "/react-admin-import-csv/static/js/2.9c0086ce.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.b62b16da.js",
-    "static/js/2.67af0141.chunk.js",
-    "static/js/main.33580fec.chunk.js"
+    "static/js/runtime-main.f4467237.js",
+    "static/js/2.9c0086ce.chunk.js",
+    "static/js/main.7fc4c355.chunk.js"
   ]
 }
