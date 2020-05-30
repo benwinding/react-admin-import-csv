@@ -42,17 +42,20 @@ export async function getCsvData(
 }
 
 export function processCsvData(data: string[][]): any[] {
-  const topRowKeys: string[] = data[0];
 
-  const dataRows = data.slice(1).map((row) => {
-    let value: any = {};
+  if (Array.isArray(data[0])) {
+    const topRowKeys: string[] = data[0];
 
-    topRowKeys.forEach((key, index) => {
-      value = setObjectValue(value, key, row[index]);
+    const dataRows = data.slice(1).map((row) => {
+      let value: any = {};
+
+      topRowKeys.forEach((key, index) => {
+        value = setObjectValue(value, key, row[index]);
+      });
+
+      return value;
     });
-
-    return value;
-  });
-
-  return dataRows;
+    return dataRows;
+  }
+  return data;
 }
