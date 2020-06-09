@@ -57,5 +57,13 @@ export function processCsvData(data: string[][]): any[] {
     });
     return dataRows;
   }
-  return data;
+  else {
+    const dataRows = [];
+    data.forEach( (obj) => {
+        let value: any = {}
+        for (let key in obj) value = setObjectValue(value, key, obj[key]);
+        dataRows.push(value);
+    });
+    return dataRows;
+  }
 }
