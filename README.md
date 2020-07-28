@@ -100,13 +100,20 @@ export const PostList = props => (
 ## Configuration Options
 
 ``` typescript
-// All configurations are optional
-const config = {
-  logging?: boolean,
+// All configuration options are optional
+const config: ImportConfig = {
+  // Enable logging
+  logging?: boolean;
+  // Disable "import new" button 
+  disableImportNew?: boolean;
+  // Disable "import overwrite" button 
+  disableImportOverwrite?: boolean;
+  // A function to translate the CSV rows on import 
+  preCommitCallback?: (action: "create" | "overwrite", values: any[]) => any[];
+  // Any option from the "papaparse" library 
   parseConfig?: {
-    // Any option from papaparse
-    // Any option from 
-  } 
+    // SEE: https://www.papaparse.com/docs#config
+  }
 }
 <ImportButton {...props} {...config}/>
 ```

@@ -43,7 +43,6 @@
     "@types/react-dom": "16.8.3",
     "@types/react-redux": "^7.1.7",
     "jest-coverage-badges": "^1.1.2",
-    "ra-language-spanish": "1.0.0",
     "ra-data-fakerest": "^3.2.2",
     "react": "16.8.6",
     "react-admin": "3.x",

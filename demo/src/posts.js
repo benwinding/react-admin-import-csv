@@ -22,10 +22,15 @@ import { CreateButton } from "ra-ui-materialui";
 
 const ListActions = props => {
   const { className, basePath } = props;
+  const config = {
+    logging: true,
+    disableImportNew: true,
+    disableImportOverwrite: false,
+  }
   return (
     <TopToolbar className={className}>
       <CreateButton basePath={basePath} />
-      <ImportButton {...props} logging="true" />
+      <ImportButton {...props} {...config} />
     </TopToolbar>
   );
 };

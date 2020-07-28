@@ -18,6 +18,7 @@ import {
   DialogTitle,
   CircularProgress,
 } from '@material-ui/core';
+import { ImportConfig } from './config.interface';
 
 export const ImportButton = (props: any) => {
   const messages = {
@@ -30,7 +31,14 @@ export const ImportButton = (props: any) => {
     resolveBrowserLocale()
   );
 
-  const { resource, parseConfig, logging, preCommitCallback } = props;
+  const {
+    parseConfig,
+    logging,
+    preCommitCallback,
+    disableImportNew,
+    disableImportOverwrite,
+  } = props as ImportConfig;
+  let { variant, label, resource, resourceName } = props;
 
   if (logging) {
     console.log({ props });
@@ -39,7 +47,6 @@ export const ImportButton = (props: any) => {
     throw new Error(i18nProvider.translate('csv.error.emptyResource'));
   }
 
-  let { variant, label, resourceName } = props;
   if (!label) {
     label = i18nProvider.translate('csv.main.import');
   }
@@ -188,7 +195,7 @@ export const ImportButton = (props: any) => {
             <span>{i18nProvider.translate('csv.dialog.cancel')}</span>
           </Button>
           <Button
-            disabled={!values || importing}
+            disabled={!values || importing || disableImportNew}
             onClick={handleSubmitCreate}
             color='secondary'
             variant='contained'
@@ -197,7 +204,7 @@ export const ImportButton = (props: any) => {
             <span>{i18nProvider.translate('csv.dialog.importNew')}</span>
           </Button>
           <Button
-            disabled={!values || importing}
+            disabled={!values || importing || disableImportOverwrite}
             onClick={handleSubmitOverwrite}
             color='primary'
             variant='contained'
