@@ -3,7 +3,7 @@ import { Button as RAButton, resolveBrowserLocale, useRefresh } from 'react-admi
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { useNotify, useDataProvider } from 'react-admin';
 import { processCsvFile } from './csv-extractor';
-
+import { create, update } from './uploader';
 import englishMessages from 'ra-language-english';
 import spanishMessages from 'ra-language-spanish';
 
@@ -34,9 +34,10 @@ export const ImportButton = (props: any) => {
   const {
     parseConfig,
     logging,
+    reportCallback,
     preCommitCallback,
     disableImportNew,
-    disableImportOverwrite,
+    disableImportOverwrite
   } = props as ImportConfig;
   let { variant, label, resource, resourceName } = props;
 
@@ -95,7 +96,9 @@ export const ImportButton = (props: any) => {
         throw new Error(i18nProvider.translate('csv.error.hasId'));
       }
       if (preCommitCallback) setValues(preCommitCallback('create', values));
-      await Promise.all(values.map((value) => dataProvider.create(resource, { data: value })));
+
+      await create(dataProvider, resource, values, reportCallback)
+
       handleComplete();
     } catch (error) {
       handleComplete(error);
@@ -105,15 +108,14 @@ export const ImportButton = (props: any) => {
   const handleSubmitOverwrite = async () => {
     setImporting(true);
     try {
-      if (values.some((v) => !v.id)) {
+      if(values.some((v) => !v.id)) {
         throw new Error(i18nProvider.translate('csv.error.noId'));
       }
       if (preCommitCallback) setValues(preCommitCallback('overwrite', values));
-      Promise.all(
-        values.map((value) => dataProvider.update(resource, { id: value.id, data: value }))
-      ).then(() => {
-        handleComplete();
-      });
+
+      update(dataProvider, resource, values, reportCallback)
+        .then(() => handleComplete())
+        .catch(error => handleComplete(error));
     } catch (error) {
       handleComplete(error);
     }
