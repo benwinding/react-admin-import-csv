@@ -25,7 +25,7 @@ const ListActions = props => {
 
   const config = {
     logging: true,
-    reportCallback: report => console.log("Report", report),
+    postCommitCallback: report => console.log("Report", report),
     disableImportNew: false,
     disableImportOverwrite: false
   }

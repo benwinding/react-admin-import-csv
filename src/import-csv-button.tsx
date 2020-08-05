@@ -34,7 +34,7 @@ export const ImportButton = (props: any) => {
   const {
     parseConfig,
     logging,
-    reportCallback,
+    postCommitCallback,
     preCommitCallback,
     disableImportNew,
     disableImportOverwrite
@@ -96,7 +96,7 @@ export const ImportButton = (props: any) => {
         throw new Error(i18nProvider.translate('csv.error.hasId'));
       }
       if (preCommitCallback) setValues(preCommitCallback('create', values));
-      await create(dataProvider, resource, values, reportCallback)
+      await create(dataProvider, resource, values, postCommitCallback)
       handleComplete();
     } catch (error) {
       handleComplete(error);
@@ -110,7 +110,7 @@ export const ImportButton = (props: any) => {
         throw new Error(i18nProvider.translate('csv.error.noId'));
       }
       if (preCommitCallback) setValues(preCommitCallback('overwrite', values));
-      update(dataProvider, resource, values, reportCallback)
+      update(dataProvider, resource, values, postCommitCallback)
         .then(() => handleComplete())
         .catch(error => handleComplete(error));
     } catch (error) {

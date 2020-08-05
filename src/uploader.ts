@@ -1,13 +1,13 @@
-export async function create(dataProvider, resource, values, reportCallback = null) {
+export async function create(dataProvider, resource, values, postCommitCallback = null) {
 
-  if(reportCallback) {
+  if(postCommitCallback) {
     const report = []
     await Promise
       .all(values.map((value) => dataProvider
         .create(resource, { data: value })
         .then(() => report.push({...value, success: true}))
         .catch(err => report.push({...value, success: false, err}))))
-        .finally(() => reportCallback(report))
+        .finally(() => postCommitCallback(report))
     return;
   }
   else {
@@ -15,8 +15,8 @@ export async function create(dataProvider, resource, values, reportCallback = nu
   }
 }
 
-export async function update(dataProvider, resource, values, reportCallback = null) {
-  if(reportCallback) {
+export async function update(dataProvider, resource, values, postCommitCallback = null) {
+  if(postCommitCallback) {
     const report = []
 
     await Promise
@@ -24,7 +24,7 @@ export async function update(dataProvider, resource, values, reportCallback = nu
         .update(resource, { id: value.id, data: value })
         .then(() => report.push({...value, success: true}))
         .catch(err => report.push({...value, success: false, err}))))
-        .finally(() => reportCallback(report));
+        .finally(() => postCommitCallback(report));
 
     return;
   }

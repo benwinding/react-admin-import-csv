@@ -2,7 +2,7 @@ import { ParseConfig } from "papaparse";
 
 export interface ImportConfig {
   logging?: boolean;
-  reportCallback?: () => any[];
+  postCommitCallback?: ([]) => any[];
   disableImportNew?: boolean;
   disableImportOverwrite?: boolean;
   parseConfig?: ParseConfig;

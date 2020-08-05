@@ -110,6 +110,8 @@ const config: ImportConfig = {
   disableImportOverwrite?: boolean;
   // A function to translate the CSV rows on import 
   preCommitCallback?: (action: "create" | "overwrite", values: any[]) => any[];
+  // A function to handle row errors after import
+  postCommitCallback?: ([]) => any[];
   // Any option from the "papaparse" library 
   parseConfig?: {
     // SEE: https://www.papaparse.com/docs#config
