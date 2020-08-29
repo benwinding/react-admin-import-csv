@@ -25,7 +25,7 @@ export const ImportButton = (props: any) => {
   const messages = {
     es: { ...spanishMessages, ...domainMessages.es },
     en: { ...englishMessages, ...domainMessages.en },
-    ch: { ...chineseMessages, ...domainMessages.ch },
+    cn: { ...chineseMessages, ...domainMessages.cn },
   };
 
   const i18nProvider = polyglotI18nProvider(

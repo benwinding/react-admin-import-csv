@@ -61,7 +61,7 @@ export var ImportButton = function (props) {
     var messages = {
         es: __assign(__assign({}, spanishMessages), domainMessages.es),
         en: __assign(__assign({}, englishMessages), domainMessages.en),
-        ch: __assign(__assign({}, chineseMessages), domainMessages.ch),
+        cn: __assign(__assign({}, chineseMessages), domainMessages.cn),
     };
     var i18nProvider = polyglotI18nProvider(function (locale) { return (messages[locale] ? messages[locale] : messages.en); }, resolveBrowserLocale());
     var _a = props, parseConfig = _a.parseConfig, logging = _a.logging, postCommitCallback = _a.postCommitCallback, preCommitCallback = _a.preCommitCallback, disableImportNew = _a.disableImportNew, disableImportOverwrite = _a.disableImportOverwrite;
