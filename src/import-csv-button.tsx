@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button as RAButton, resolveBrowserLocale, useRefresh } from 'react-admin';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import { useNotify, useDataProvider } from 'react-admin';
+import { useNotify, useDataProvider,useLocale } from 'react-admin';
 import { processCsvFile } from './csv-extractor';
 import { create, update } from './uploader';
 import englishMessages from 'ra-language-english';
@@ -22,15 +22,16 @@ import {
 import { ImportConfig } from './config.interface';
 
 export const ImportButton = (props: any) => {
+
+  const locale = useDataProvider();
   const messages = {
     es: { ...spanishMessages, ...domainMessages.es },
     en: { ...englishMessages, ...domainMessages.en },
     cn: { ...chineseMessages, ...domainMessages.cn },
   };
-
   const i18nProvider = polyglotI18nProvider(
     (locale) => (messages[locale] ? messages[locale] : messages.en),
-    resolveBrowserLocale()
+    locale || resolveBrowserLocale()
   );
 
   const {
