@@ -23,7 +23,7 @@ import { ImportConfig } from './config.interface';
 
 export const ImportButton = (props: any) => {
 
-  const locale = useDataProvider();
+  const locale = useLocale();
   const messages = {
     es: { ...spanishMessages, ...domainMessages.es },
     en: { ...englishMessages, ...domainMessages.en },

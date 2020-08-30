@@ -48,7 +48,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 import React from 'react';
 import { Button as RAButton, resolveBrowserLocale, useRefresh } from 'react-admin';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import { useNotify, useDataProvider } from 'react-admin';
+import { useNotify, useDataProvider, useLocale } from 'react-admin';
 import { processCsvFile } from './csv-extractor';
 import { create, update } from './uploader';
 import englishMessages from 'ra-language-english';
@@ -58,7 +58,7 @@ import * as domainMessages from './i18n';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, } from '@material-ui/core';
 export var ImportButton = function (props) {
-    var locale = useDataProvider();
+    var locale = useLocale();
     var messages = {
         es: __assign(__assign({}, spanishMessages), domainMessages.es),
         en: __assign(__assign({}, englishMessages), domainMessages.en),
