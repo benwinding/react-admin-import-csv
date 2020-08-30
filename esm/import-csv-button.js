@@ -58,12 +58,13 @@ import * as domainMessages from './i18n';
 import polyglotI18nProvider from 'ra-i18n-polyglot';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress, } from '@material-ui/core';
 export var ImportButton = function (props) {
+    var locale = useDataProvider();
     var messages = {
         es: __assign(__assign({}, spanishMessages), domainMessages.es),
         en: __assign(__assign({}, englishMessages), domainMessages.en),
         cn: __assign(__assign({}, chineseMessages), domainMessages.cn),
     };
-    var i18nProvider = polyglotI18nProvider(function (locale) { return (messages[locale] ? messages[locale] : messages.en); }, resolveBrowserLocale());
+    var i18nProvider = polyglotI18nProvider(function (locale) { return (messages[locale] ? messages[locale] : messages.en); }, locale || resolveBrowserLocale());
     var _a = props, parseConfig = _a.parseConfig, logging = _a.logging, postCommitCallback = _a.postCommitCallback, preCommitCallback = _a.preCommitCallback, disableImportNew = _a.disableImportNew, disableImportOverwrite = _a.disableImportOverwrite;
     var variant = props.variant, label = props.label, resource = props.resource, resourceName = props.resourceName;
     if (logging) {
