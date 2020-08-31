@@ -1,6 +1,3 @@
-
-import en from './en';
-import es from './es';
-import cn from './cn';
-
-export { en, es, cn };
+export { default as es } from './es';
+export { default as en } from './en';
+export { default as cn } from './cn';
