@@ -30,7 +30,7 @@
     "react-admin": "3.x"
   },
   "dependencies": {
-    "papaparse": "4.x",
+    "papaparse": "5.x",
     "ra-language-chinese": "^2.0.5",
     "ra-language-spanish": "1.x",
     "ramda": "^0.27.0"
