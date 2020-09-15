@@ -120,6 +120,7 @@ export const ImportButton = (props: any) => {
         resource,
         preCommitCallback ? preCommitCallback("overwrite", values) : values,
         postCommitCallback,
+        useCreateMany,
         logging
       );
 

@@ -8,26 +8,17 @@ export async function create(
   useCreateMany = false,
   logging = false
 ) {
-  if (postCommitCallback) {
-    const report = [];
-    await createInDataProvider(
-      dataProvider,
-      resource,
-      values,
-      useCreateMany,
-      logging
-    )
-      .then(() => report.push({ values, success: true }))
-      .catch((err) => report.push({ values, success: false, err }));
-    return postCommitCallback(report);
-  }
-  return createInDataProvider(
+  const reportItems = await createInDataProvider(
     dataProvider,
     resource,
     values,
     useCreateMany,
     logging
   );
+  if (postCommitCallback) {
+    postCommitCallback(reportItems);
+  }
+  return reportItems.map(r => r.response);
 }
 
 export async function update(
@@ -35,16 +26,27 @@ export async function update(
   resource: string,
   values: any[],
   postCommitCallback = null,
+  useCreateMany = false,
   logging = false
 ) {
+  const reportItems = await updateInDataProvider(
+    dataProvider,
+    resource,
+    values,
+    useCreateMany,
+    logging
+  );
   if (postCommitCallback) {
-    const report = [];
-    await updateInDataProvider(dataProvider, resource, values, logging)
-      .then(() => report.push({ values, success: true }))
-      .catch((err) => report.push({ values, success: false, err }));
-    return postCommitCallback(report);
+    postCommitCallback(reportItems);
   }
-  return updateInDataProvider(dataProvider, resource, values, logging);
+  return reportItems.map(r => r.response);
+}
+
+interface ReportItem {
+  value: any;
+  success: boolean;
+  err?: any;
+  response?: any;
 }
 
 async function createInDataProvider(
@@ -53,7 +55,7 @@ async function createInDataProvider(
   values: any[],
   useCreateMany: boolean,
   logging: boolean
-) {
+): Promise<ReportItem[]> {
   if (logging) {
     console.log("uploader.addInDataProvider", {
       dataProvider,
@@ -63,18 +65,30 @@ async function createInDataProvider(
       useCreateMany,
     });
   }
+  const reportItems: ReportItem[] = [];
   if (useCreateMany) {
-    return dataProvider.createMany(resource, { data: values });
+    await dataProvider
+      .createMany(resource, { data: values })
+      .then(() => reportItems.push({ value: values, success: true }))
+      .catch((err) => reportItems.push({ value: values, success: false, err }));
+  } else {
+    await Promise.all(
+      values.map((value) =>
+        dataProvider
+          .create(resource, { data: value })
+          .then((res) => reportItems.push({ value, success: true, response: res }))
+          .catch((err) => reportItems.push({ value, success: false, err }))
+      )
+    );
   }
-  return Promise.all(
-    values.map((value) => dataProvider.create(resource, { data: value }))
-  );
+  return reportItems;
 }
 
 async function updateInDataProvider(
   dataProvider: DataProvider,
   resource: string,
   values: any[],
+  useCreateMany: boolean,
   logging: boolean
 ) {
   const ids = values.map((v) => v.id);
@@ -84,8 +98,25 @@ async function updateInDataProvider(
       resource,
       values,
       logging,
+      useCreateMany,
       ids,
     });
   }
-  return dataProvider.updateMany(resource, { ids: ids, data: values });
+  const reportItems: ReportItem[] = [];
+  if (useCreateMany) {
+    await dataProvider
+      .updateMany(resource, { ids: ids, data: values })
+      .then((res) => reportItems.push({ value: values, success: true, response: res }))
+      .catch((err) => reportItems.push({ value: values, success: false, err }));
+  } else {
+    await Promise.all(
+      values.map((value) =>
+        dataProvider
+          .update(resource, { id: value.id, data: value } as any)
+          .then((res) => reportItems.push({ value, success: true, response: res }))
+          .catch((err) => reportItems.push({ value, success: false, err }))
+      )
+    );
+  }
+  return reportItems;
 }
