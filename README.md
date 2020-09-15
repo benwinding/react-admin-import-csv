@@ -120,6 +120,44 @@ const config: ImportConfig = {
 <ImportButton {...props} {...config}/>
 ```
 
+## Translation `i18n`
+
+This package uses `react-admin`'s global i18n translation. Below is an example on how to set it up with this package.
+
+Current supported languages (submit a PR if you'd like to add a language):
+- English (en)
+- Spanish (es)
+- Chinese (cn)
+
+**Example (i18nProvider)**
+
+``` jsx
+import { resolveBrowserLocale, useLocale } from "react-admin";
+import polyglotI18nProvider from "ra-i18n-polyglot";
+import englishMessages from "ra-language-english";
+// This package's translations
+import * as domainMessages from "./build-watch/i18n";
+
+// Select locale based on react-admin OR browser
+const locale = useLocale() || resolveBrowserLocale();
+// Create messages object
+const messages = {
+  // Delete languages you don't need
+  en: { ...englishMessages, ...domainMessages.en },
+  cn: { ...chineseMessages, ...domainMessages.cn },
+  es: { ...spanishMessages, ...domainMessages.es },
+};
+// Create polyglot provider
+const i18nProvider = polyglotI18nProvider(
+  (locale) => (messages[locale] ? messages[locale] : messages.en),
+  locale
+);
+
+// declare prop in Admin component
+<Admin dataProvider={dataProvider} i18nProvider={i18nProvider}>
+```
+[More information on this setup here](https://marmelab.com/react-admin/Translation.html)
+
 # Development
 
 If you'd like to develop on `react-admin-import-csv` do the following.
