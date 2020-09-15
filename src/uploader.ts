@@ -18,7 +18,10 @@ export async function create(
   if (postCommitCallback) {
     postCommitCallback(reportItems);
   }
-  return reportItems.map(r => r.response);
+  const shouldReject = !postCommitCallback && reportItems.some(r => !r.success);
+  if (shouldReject) {
+    return Promise.reject(reportItems.map(r => r.response));
+  }
 }
 
 export async function update(
@@ -39,7 +42,10 @@ export async function update(
   if (postCommitCallback) {
     postCommitCallback(reportItems);
   }
-  return reportItems.map(r => r.response);
+  const shouldReject = !postCommitCallback && reportItems.some(r => !r.success);
+  if (shouldReject) {
+    return Promise.reject(reportItems.map(r => r.response));
+  }
 }
 
 interface ReportItem {
