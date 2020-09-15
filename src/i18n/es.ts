@@ -11,7 +11,7 @@ export default {
         "La propiedad 'resource' esta vacia. ¿Fue pasada {...props} al componente `ImportButton`?",
     },
     alert: {
-      imported: 'Importado ',
+      imported: 'Importado %{filename}',
     },
     dialog: {
       importTo: 'Importar para',

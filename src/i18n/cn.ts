@@ -11,7 +11,7 @@ export default {
         "'resource' 属性为空,你是否将{...props}设置到ImportButton了?",
     },
     alert: {
-      imported: '导入完成',
+      imported: '导入完成 %{filename}',
     },
     dialog: {
       importTo: '导入到',

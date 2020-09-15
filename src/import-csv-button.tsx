@@ -1,15 +1,14 @@
-import React from 'react';
-import { Button as RAButton, resolveBrowserLocale, useRefresh } from 'react-admin';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import { useNotify, useDataProvider,useLocale } from 'react-admin';
-import { processCsvFile } from './csv-extractor';
-import { create, update } from './uploader';
-import englishMessages from 'ra-language-english';
-import spanishMessages from 'ra-language-spanish';
-import chineseMessages from 'ra-language-chinese';
-
-import * as domainMessages from './i18n';
-import polyglotI18nProvider from 'ra-i18n-polyglot';
+import React from "react";
+import GetAppIcon from "@material-ui/icons/GetApp";
+import {
+  Button as RAButton,
+  useRefresh,
+  useNotify,
+  useDataProvider,
+  useTranslate,
+} from "react-admin";
+import { processCsvFile } from "./csv-extractor";
+import { create, update } from "./uploader";
 
 import {
   Button,
@@ -18,45 +17,32 @@ import {
   DialogContent,
   DialogTitle,
   CircularProgress,
-} from '@material-ui/core';
-import { ImportConfig } from './config.interface';
+} from "@material-ui/core";
+import { ImportConfig } from "./config.interface";
 
 export const ImportButton = (props: any) => {
-
-  const locale = useLocale();
-  const messages = {
-    es: { ...spanishMessages, ...domainMessages.es },
-    en: { ...englishMessages, ...domainMessages.en },
-    cn: { ...chineseMessages, ...domainMessages.cn },
-  };
-  const i18nProvider = polyglotI18nProvider(
-    (locale) => (messages[locale] ? messages[locale] : messages.en),
-    locale || resolveBrowserLocale()
-  );
-
+  const translate = useTranslate();
   const {
     parseConfig,
     logging,
     postCommitCallback,
     preCommitCallback,
+    useCreateMany,
     disableImportNew,
-    disableImportOverwrite
+    disableImportOverwrite,
   } = props as ImportConfig;
   let { variant, label, resource, resourceName } = props;
 
-  if (logging) {
-    console.log({ props });
-  }
   if (!resource) {
-    throw new Error(i18nProvider.translate('csv.error.emptyResource'));
+    throw new Error(translate("csv.error.emptyResource"));
   }
 
   if (!label) {
-    label = i18nProvider.translate('csv.main.import');
+    label = translate("csv.main.import");
   }
 
   if (!variant) {
-    variant = 'text';
+    variant = "text";
   }
 
   if (!resourceName) {
@@ -82,13 +68,19 @@ export const ImportButton = (props: any) => {
   };
 
   const handleComplete = (error = false) => {
+    if (logging) {
+      console.log("import-csv-button", {
+        props,
+        notify,
+      });
+    }
     handleClose();
     if (!error) {
-      notify(`${i18nProvider.translate('csv.alert.imported')} ${fileName}`);
+      notify("csv.alert.imported", "info", { filename: fileName });
       refresh();
     }
     if (error) {
-      notify(`${i18nProvider.translate('csv.error.importing')} ${fileName}, ${error}`, 'error');
+      notify("csv.alert.importing", "error", { filename: fileName });
     }
   };
 
@@ -97,15 +89,17 @@ export const ImportButton = (props: any) => {
 
     try {
       if (values.some((v) => v.id)) {
-        throw new Error(i18nProvider.translate('csv.error.hasId'));
+        throw new Error(translate("csv.error.hasId"));
       }
 
       await create(
         dataProvider,
         resource,
-        preCommitCallback ? preCommitCallback('create', values) : values,
-        postCommitCallback
-      )
+        preCommitCallback ? preCommitCallback("create", values) : values,
+        postCommitCallback,
+        useCreateMany,
+        logging
+      );
 
       handleComplete();
     } catch (error) {
@@ -118,15 +112,16 @@ export const ImportButton = (props: any) => {
 
     try {
       if (values.some((v) => !v.id)) {
-        throw new Error(i18nProvider.translate('csv.error.noId'));
+        throw new Error(translate("csv.error.noId"));
       }
 
       await update(
         dataProvider,
         resource,
-        preCommitCallback ? preCommitCallback('overwrite', values) : values,
-        postCommitCallback
-      )
+        preCommitCallback ? preCommitCallback("overwrite", values) : values,
+        postCommitCallback,
+        logging
+      );
 
       handleComplete();
     } catch (error) {
@@ -157,75 +152,85 @@ export const ImportButton = (props: any) => {
   return (
     <>
       <RAButton
-        color='primary'
-        component='span'
+        color="primary"
+        component="span"
         variant={variant}
         label={label}
         onClick={openImportDialog}
       >
-        <GetAppIcon style={{ transform: 'rotate(180deg)', fontSize: '20' }} />
+        <GetAppIcon style={{ transform: "rotate(180deg)", fontSize: "20" }} />
       </RAButton>
       <Dialog
         open={open}
         onClose={handleClose}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id='alert-dialog-title'>
-          {i18nProvider.translate('csv.dialog.importTo')} "{resourceName}"
+        <DialogTitle id="alert-dialog-title">
+          {translate("csv.dialog.importTo")} "{resourceName}"
         </DialogTitle>
         <DialogContent>
-          <div id='alert-dialog-description' style={{ fontFamily: 'sans-serif' }}>
-            <p style={{ margin: '0px' }}>{i18nProvider.translate('csv.dialog.dataFileReq')}</p>
+          <div
+            id="alert-dialog-description"
+            style={{ fontFamily: "sans-serif" }}
+          >
+            <p style={{ margin: "0px" }}>
+              {translate("csv.dialog.dataFileReq")}
+            </p>
             <ol>
-              <li>{i18nProvider.translate('csv.dialog.extension')}</li>
-              <li>{i18nProvider.translate('csv.dialog.idColumnCreate')}</li>
-              <li>{i18nProvider.translate('csv.dialog.idColumnUpdate')}</li>
+              <li>{translate("csv.dialog.extension")}</li>
+              <li>{translate("csv.dialog.idColumnCreate")}</li>
+              <li>{translate("csv.dialog.idColumnUpdate")}</li>
             </ol>
-            <Button variant='contained' component='label'>
-              <span>{i18nProvider.translate('csv.dialog.chooseFile')}</span>
-              <GetAppIcon style={{ transform: 'rotate(180deg)', fontSize: '20' }} />
+            <Button variant="contained" component="label">
+              <span>{translate("csv.dialog.chooseFile")}</span>
+              <GetAppIcon
+                style={{ transform: "rotate(180deg)", fontSize: "20" }}
+              />
               <input
-                type='file'
-                style={{ display: 'none' }}
+                type="file"
+                style={{ display: "none" }}
                 onChange={onFileAdded}
-                accept='.csv,.tsv,.txt'
+                accept=".csv,.tsv,.txt"
               />
             </Button>
             {!!fileName && (
-              <p style={{ marginBottom: '0px' }}>
-                {i18nProvider.translate('csv.dialog.processed')}: <strong>{fileName}</strong>
+              <p style={{ marginBottom: "0px" }}>
+                {translate("csv.dialog.processed")}: <strong>{fileName}</strong>
               </p>
             )}
             {!!values && (
-              <p style={{ margin: '0px' }}>
-                {i18nProvider.translate('csv.dialog.rowCount')}: <strong>{values.length}</strong>
+              <p style={{ margin: "0px" }}>
+                {translate("csv.dialog.rowCount")}:{" "}
+                <strong>{values.length}</strong>
               </p>
             )}
-            {!!errorTxt && <p style={{ margin: '0px', color: 'red' }}>{errorTxt}</p>}
+            {!!errorTxt && (
+              <p style={{ margin: "0px", color: "red" }}>{errorTxt}</p>
+            )}
           </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>
-            <span>{i18nProvider.translate('csv.dialog.cancel')}</span>
+            <span>{translate("csv.dialog.cancel")}</span>
           </Button>
           <Button
             disabled={!values || importing || disableImportNew}
             onClick={handleSubmitCreate}
-            color='secondary'
-            variant='contained'
+            color="secondary"
+            variant="contained"
           >
             {importing && <CircularProgress size={18} thickness={2} />}
-            <span>{i18nProvider.translate('csv.dialog.importNew')}</span>
+            <span>{translate("csv.dialog.importNew")}</span>
           </Button>
           <Button
             disabled={!values || importing || disableImportOverwrite}
             onClick={handleSubmitOverwrite}
-            color='primary'
-            variant='contained'
+            color="primary"
+            variant="contained"
           >
             {importing && <CircularProgress size={18} thickness={2} />}
-            <span>{i18nProvider.translate('csv.dialog.importOverride')}</span>
+            <span>{translate("csv.dialog.importOverride")}</span>
           </Button>
         </DialogActions>
       </Dialog>
