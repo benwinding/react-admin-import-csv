@@ -21,16 +21,24 @@ import {
 import { ImportButton } from "./build-watch";
 import { CreateButton, ExportButton } from "ra-ui-materialui";
 
-const ListActions = props => {
-  const { 
-    className, 
-    basePath, 
-    total, 
-    resource, 
-    currentSort, 
-    filterValues, 
-    exporter 
+const ListActions = (props) => {
+  const {
+    className,
+    basePath,
+    total,
+    resource,
+    currentSort,
+    filterValues,
+    exporter,
   } = props;
+  const config = {
+    logging: true,
+    validateRow: async (row) => {
+      if (row.id) {
+        // throw new Error("AAAA");
+      }
+    },
+  };
   return (
     <TopToolbar className={className}>
       <CreateButton basePath={basePath} />
@@ -41,7 +49,7 @@ const ListActions = props => {
         filter={filterValues}
         exporter={exporter}
       />
-      <ImportButton {...props} />
+      <ImportButton {...props} {...config} />
     </TopToolbar>
   );
 };
