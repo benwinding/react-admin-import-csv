@@ -2,10 +2,14 @@ import { ParseConfig } from "papaparse";
 
 export interface ImportConfig {
   logging?: boolean;
-  postCommitCallback?: ([]) => any[];
-  useCreateMany?: boolean;
+  parseConfig?: ParseConfig;
   disableImportNew?: boolean;
   disableImportOverwrite?: boolean;
-  parseConfig?: ParseConfig;
-  preCommitCallback?: (action: "create" | "overwrite", values: any[]) => any[];
+  preCommitCallback?: PrecommitCallback;
+  postCommitCallback?: ErrorCallback;
+  validateRow?: ValidateRowFunction;
 };
+
+export type PrecommitCallback = (action: "create" | "overwrite", values: any[]) => any[];
+export type ValidateRowFunction = (csvRowItem: any) => Promise<void>;
+export type ErrorCallback = (error: any) => void;
