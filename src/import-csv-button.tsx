@@ -7,11 +7,10 @@ import {
   useDataProvider,
   useTranslate,
 } from "react-admin";
-import { processCsvFile } from "./csv-extractor";
-import { create, update } from "./uploader";
 
 import {
   Button,
+  Tooltip,
   Dialog,
   DialogActions,
   DialogContent,
@@ -19,19 +18,33 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import { ImportConfig } from "./config.interface";
+import { SimpleLogger } from "./SimpleLogger";
+import {
+  CheckCSVValidation,
+  GetCSVItems,
+  GetIdsColliding,
+} from "./import-controller";
+import { create } from "./uploader";
 
 export const ImportButton = (props: any) => {
+  const refresh = useRefresh();
   const translate = useTranslate();
+  const dataProvider = useDataProvider();
+
   const {
-    parseConfig,
     logging,
-    postCommitCallback,
-    preCommitCallback,
-    useCreateMany,
+    parseConfig,
     disableImportNew,
     disableImportOverwrite,
+    preCommitCallback,
+    postCommitCallback,
+    validateRow,
   } = props as ImportConfig;
   let { variant, label, resource, resourceName } = props;
+  const logger = new SimpleLogger("import-csv-button", true);
+  logger.setEnabled(logging);
+
+  warnAboutRemovedFunctions(props);
 
   if (!resource) {
     throw new Error(translate("csv.error.emptyResource"));
@@ -50,117 +63,140 @@ export const ImportButton = (props: any) => {
   }
 
   const [open, setOpen] = React.useState(false);
-  const [importing, setImporting] = React.useState(false);
-  const [fileName, setFileName] = React.useState(null as string);
+  const [openAsk, setOpenAsk] = React.useState(false);
+  const [importStatus, setImportStatus] = React.useState(null as string);
   const [values, setValues] = React.useState(null as any[]);
+  const [countTotalRows, setCountTotalRows] = React.useState(null as number);
+  const [countOverwrite, setCountOverwrite] = React.useState(null as number);
+
+  const [fileName, setFileName] = React.useState(null as string);
   const [errorTxt, setErrorTxt] = React.useState(null as string);
-  const refresh = useRefresh();
+  let refInput: HTMLInputElement;
 
-  const openImportDialog = () => {
-    setOpen(true);
+  function logStatus(str: string) {
+    logger.log(str);
+    setImportStatus(str);
+  }
+
+  const clickImportButton = async () => {
+    refInput.value = "";
+    refInput.click();
   };
-
-  const handleClose = () => {
-    setOpen(false);
-    setImporting(false);
-    setFileName(null as string);
-    setValues(null as any[]);
-  };
-
-  const handleComplete = (error = false) => {
-    if (logging) {
-      console.log("import-csv-button", {
-        props,
-        notify,
-      });
-    }
-    handleClose();
-    if (!error) {
-      notify("csv.alert.imported", "info", { filename: fileName });
-      refresh();
-    }
-    if (error) {
-      notify("csv.alert.importing", "error", { filename: fileName });
-    }
-  };
-
-  const handleSubmitCreate = async () => {
-    setImporting(true);
-
-    try {
-      if (values.some((v) => v.id)) {
-        throw new Error(translate("csv.error.hasId"));
-      }
-
-      await create(
-        dataProvider,
-        resource,
-        preCommitCallback ? preCommitCallback("create", values) : values,
-        postCommitCallback,
-        useCreateMany,
-        logging
-      );
-
-      handleComplete();
-    } catch (error) {
-      handleComplete(error);
-    }
-  };
-
-  const handleSubmitOverwrite = async () => {
-    setImporting(true);
-
-    try {
-      if (values.some((v) => !v.id)) {
-        throw new Error(translate("csv.error.noId"));
-      }
-
-      await update(
-        dataProvider,
-        resource,
-        preCommitCallback ? preCommitCallback("overwrite", values) : values,
-        postCommitCallback,
-        useCreateMany,
-        logging
-      );
-
-      handleComplete();
-    } catch (error) {
-      handleComplete(error);
-    }
-  };
-
-  const notify = useNotify();
-  const dataProvider = useDataProvider();
 
   const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     setFileName(file.name);
+    setOpen(true);
     try {
-      const values = await processCsvFile(file, parseConfig);
-      if (logging) {
-        console.log({ values });
+      // Is valid csv
+      logStatus("Parsing CSV file");
+      const csvItems = await GetCSVItems(logging, translate, file, parseConfig);
+      // Does CSV pass user validation
+      logStatus("Validating CSV file");
+      await CheckCSVValidation(logging, translate, csvItems, validateRow);
+      setValues(csvItems);
+      // Are there any import overwrites?
+      logStatus("Checking rows to import");
+      const collidingIds = await GetIdsColliding(
+        logging,
+        translate,
+        dataProvider,
+        csvItems,
+        resourceName
+      );
+      const hasCollidingIds = !!collidingIds.length;
+      setCountOverwrite(collidingIds.length);
+      if (hasCollidingIds) {
+        // Ask Replace X Rows? Skip these rows? Decied For Each?
+        logStatus("Ask Replace X Rows?" + hasCollidingIds);
+        setOpenAsk(true);
+      } else {
+        await create(
+          logging,
+          dataProvider,
+          resourceName,
+          csvItems,
+          preCommitCallback,
+          postCommitCallback
+        );
+        handleClose()
       }
-      setValues(values);
-      setErrorTxt(null);
+      // Begin Import
     } catch (error) {
-      console.error(error);
-      setValues(null);
+      logStatus("");
       setErrorTxt(error.toString());
     }
   };
 
+  const notify = useNotify();
+  const handleClose = () => {
+    setOpen(false);
+    notify("csv.alert.imported");
+    setValues(null);
+    setFileName(null);
+    refresh();
+  };
+
+  const handleAskClose = () => {
+    setOpen(false);
+    setFileName(null as string);
+  };
+
+  const handleReplace = () => {};
+
+  const handleSkip = () => {};
+
+  const handleAskDecide = () => {};
+
   return (
     <>
-      <RAButton
-        color="primary"
-        component="span"
-        variant={variant}
-        label={label}
-        onClick={openImportDialog}
+      <Tooltip title={translate("csv.dialog.extension")}>
+        <div>
+          <RAButton
+            color="primary"
+            component="span"
+            variant={variant}
+            label={label}
+            onClick={clickImportButton}
+          >
+            <GetAppIcon
+              style={{ transform: "rotate(180deg)", fontSize: "20" }}
+            />
+          </RAButton>
+          <input
+            ref={(ref) => (refInput = ref)}
+            type="file"
+            style={{ display: "none" }}
+            onChange={onFileAdded}
+            accept=".csv,.tsv"
+          />
+        </div>
+      </Tooltip>
+
+      <Dialog
+        open={openAsk}
+        onClose={handleAskClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
       >
-        <GetAppIcon style={{ transform: "rotate(180deg)", fontSize: "20" }} />
-      </RAButton>
+        <DialogTitle id="alert-dialog-title">
+          Replace or Skip Records
+        </DialogTitle>
+        <DialogContent>
+          <div>
+            <Button onClick={handleReplace}>
+              <span>Replace the rows</span>
+            </Button>
+            <Button onClick={handleSkip}>
+              <span>Skip these rows</span>
+            </Button>
+            <Button onClick={handleAskDecide}>
+              <span>Let me decide for each row</span>
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Dialog
         open={open}
         onClose={handleClose}
@@ -168,7 +204,10 @@ export const ImportButton = (props: any) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {translate("csv.dialog.importTo")} "{resourceName}"
+          {translate("csv.dialog.importTo", {
+            resource: resourceName,
+            count: countTotalRows,
+          })}
         </DialogTitle>
         <DialogContent>
           <div
@@ -176,65 +215,47 @@ export const ImportButton = (props: any) => {
             style={{ fontFamily: "sans-serif" }}
           >
             <p style={{ margin: "0px" }}>
-              {translate("csv.dialog.dataFileReq")}
+              file: <strong>{fileName}</strong>
+              rows: <strong>{countTotalRows}</strong>
             </p>
-            <ol>
-              <li>{translate("csv.dialog.extension")}</li>
-              <li>{translate("csv.dialog.idColumnCreate")}</li>
-              <li>{translate("csv.dialog.idColumnUpdate")}</li>
-            </ol>
-            <Button variant="contained" component="label">
-              <span>{translate("csv.dialog.chooseFile")}</span>
-              <GetAppIcon
-                style={{ transform: "rotate(180deg)", fontSize: "20" }}
-              />
-              <input
-                type="file"
-                style={{ display: "none" }}
-                onChange={onFileAdded}
-                accept=".csv,.tsv,.txt"
-              />
-            </Button>
-            {!!fileName && (
-              <p style={{ marginBottom: "0px" }}>
-                {translate("csv.dialog.processed")}: <strong>{fileName}</strong>
-              </p>
-            )}
-            {!!values && (
-              <p style={{ margin: "0px" }}>
-                {translate("csv.dialog.rowCount")}:{" "}
-                <strong>{values.length}</strong>
-              </p>
-            )}
+
+            <p style={{ margin: "0px" }}>Status</p>
+            {!!importStatus && <p>{importStatus}</p>}
+
             {!!errorTxt && (
-              <p style={{ margin: "0px", color: "red" }}>{errorTxt}</p>
+              <div>
+                <p>Error:</p>
+                <p style={{ margin: "0px", color: "red" }}>{errorTxt}</p>
+              </div>
             )}
+            <pre>
+            {JSON.stringify(values, null, 2) }
+            </pre>
           </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>
             <span>{translate("csv.dialog.cancel")}</span>
           </Button>
-          <Button
-            disabled={!values || importing || disableImportNew}
-            onClick={handleSubmitCreate}
-            color="secondary"
-            variant="contained"
-          >
-            {importing && <CircularProgress size={18} thickness={2} />}
-            <span>{translate("csv.dialog.importNew")}</span>
-          </Button>
-          <Button
-            disabled={!values || importing || disableImportOverwrite}
-            onClick={handleSubmitOverwrite}
-            color="primary"
-            variant="contained"
-          >
-            {importing && <CircularProgress size={18} thickness={2} />}
-            <span>{translate("csv.dialog.importOverride")}</span>
-          </Button>
         </DialogActions>
       </Dialog>
     </>
   );
 };
+
+function warnAboutRemovedFunctions(props) {
+  const logger = new SimpleLogger("import-csv-button warning", true);
+  const oldRemovedProps = [
+    "disableImportNew",
+    "disableImportOverwrite",
+    "postCommitCallback",
+    "preCommitCallback",
+  ];
+  oldRemovedProps.map((oldRemovedProp) => {
+    if (props[oldRemovedProp]) {
+      logger.warn(
+        `The setting: "${oldRemovedProp}" has been removed from the "react-admin-import-csv" package, goto https://github.com/benwinding/react-admin-import-csv for the updated API`
+      );
+    }
+  });
+}

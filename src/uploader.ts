@@ -1,50 +1,60 @@
+import { ErrorCallback, PrecommitCallback } from "./config.interface";
+import { SimpleLogger } from "./SimpleLogger";
 import { DataProvider } from "ra-core";
 
+let logger = new SimpleLogger("uploader", false);
+
 export async function create(
+  logging: boolean,
   dataProvider: DataProvider,
   resource: string,
   values: any[],
-  postCommitCallback = null,
-  useCreateMany = false,
-  logging = false
+  preCommitCallback: PrecommitCallback,
+  postCommitCallback: ErrorCallback
 ) {
+  const parsedValues = preCommitCallback
+    ? preCommitCallback("create", values)
+    : values;
   const reportItems = await createInDataProvider(
+    logging,
     dataProvider,
     resource,
-    values,
-    useCreateMany,
-    logging
+    parsedValues
   );
   if (postCommitCallback) {
     postCommitCallback(reportItems);
   }
-  const shouldReject = !postCommitCallback && reportItems.some(r => !r.success);
+  const shouldReject =
+    !postCommitCallback && reportItems.some((r) => !r.success);
   if (shouldReject) {
-    return Promise.reject(reportItems.map(r => r.response));
+    return Promise.reject(reportItems.map((r) => r.response));
   }
 }
 
 export async function update(
+  logging: boolean,
   dataProvider: DataProvider,
   resource: string,
   values: any[],
-  postCommitCallback = null,
-  useCreateMany = false,
-  logging = false
+  preCommitCallback: PrecommitCallback,
+  postCommitCallback: ErrorCallback
 ) {
+  const parsedValues = preCommitCallback
+    ? preCommitCallback("create", values)
+    : values;
   const reportItems = await updateInDataProvider(
+    logging,
     dataProvider,
     resource,
-    values,
-    useCreateMany,
-    logging
+    parsedValues
   );
   if (postCommitCallback) {
     postCommitCallback(reportItems);
   }
-  const shouldReject = !postCommitCallback && reportItems.some(r => !r.success);
+  const shouldReject =
+    !postCommitCallback && reportItems.some((r) => !r.success);
   if (shouldReject) {
-    return Promise.reject(reportItems.map(r => r.response));
+    return Promise.reject(reportItems.map((r) => r.response));
   }
 }
 
@@ -56,73 +66,73 @@ interface ReportItem {
 }
 
 async function createInDataProvider(
+  logging: boolean,
   dataProvider: DataProvider,
   resource: string,
-  values: any[],
-  useCreateMany: boolean,
-  logging: boolean
+  values: any[]
 ): Promise<ReportItem[]> {
-  if (logging) {
-    console.log("uploader.addInDataProvider", {
-      dataProvider,
-      resource,
-      values,
-      logging,
-      useCreateMany,
-    });
-  }
+  logger.setEnabled(logging);
+  logger.log("addInDataProvider", { dataProvider, resource, values });
   const reportItems: ReportItem[] = [];
-  if (useCreateMany) {
-    await dataProvider
-      .createMany(resource, { data: values })
-      .then(() => reportItems.push({ value: values, success: true }))
-      .catch((err) => reportItems.push({ value: values, success: false, err }));
-  } else {
-    await Promise.all(
-      values.map((value) =>
-        dataProvider
-          .create(resource, { data: value })
-          .then((res) => reportItems.push({ value, success: true, response: res }))
-          .catch((err) => reportItems.push({ value, success: false, err }))
-      )
-    );
+  try {
+    await dataProvider.createMany(resource, { data: values });
+  } catch (error) {
+    const shouldUseFallback = error.toString().includes("Unknown dataProvider");
+    if (shouldUseFallback) {
+      logger.log(
+        "addInDataProvider",
+        "createMany not found on provider: using fallback"
+      );
+      try {
+        await createInDataProviderFallback(dataProvider, resource, values);
+      } catch (error) {
+        logger.error("addInDataProvider", error);
+      }
+    }
   }
   return reportItems;
 }
 
-async function updateInDataProvider(
+async function createInDataProviderFallback(
   dataProvider: DataProvider,
   resource: string,
-  values: any[],
-  useCreateMany: boolean,
-  logging: boolean
+  values: any[]
+) {
+  const reportItems: ReportItem[] = [];
+  await Promise.all(
+    values.map((value) =>
+      dataProvider
+        .create(resource, { data: value })
+        .then((res) =>
+          reportItems.push({ value, success: true, response: res })
+        )
+        .catch((err) => reportItems.push({ value, success: false, err }))
+    )
+  );
+  return reportItems;
+}
+
+async function updateInDataProvider(
+  logging: boolean,
+  dataProvider: DataProvider,
+  resource: string,
+  values: any[]
 ) {
   const ids = values.map((v) => v.id);
-  if (logging) {
-    console.log("uploader.updateInDataProvider", {
-      dataProvider,
-      resource,
-      values,
-      logging,
-      useCreateMany,
-      ids,
-    });
-  }
+  logger.setEnabled(logging);
+  logger.log("updateInDataProvider", {
+    dataProvider,
+    resource,
+    values,
+    logging,
+    ids,
+  });
   const reportItems: ReportItem[] = [];
-  if (useCreateMany) {
-    await dataProvider
-      .updateMany(resource, { ids: ids, data: values })
-      .then((res) => reportItems.push({ value: values, success: true, response: res }))
-      .catch((err) => reportItems.push({ value: values, success: false, err }));
-  } else {
-    await Promise.all(
-      values.map((value) =>
-        dataProvider
-          .update(resource, { id: value.id, data: value } as any)
-          .then((res) => reportItems.push({ value, success: true, response: res }))
-          .catch((err) => reportItems.push({ value, success: false, err }))
-      )
-    );
-  }
+  await dataProvider
+    .updateMany(resource, { ids: ids, data: values })
+    .then((res) =>
+      reportItems.push({ value: values, success: true, response: res })
+    )
+    .catch((err) => reportItems.push({ value: values, success: false, err }));
   return reportItems;
 }
