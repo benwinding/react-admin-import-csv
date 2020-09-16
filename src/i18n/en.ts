@@ -4,6 +4,8 @@ export default {
       import: 'Import',
     },
     error: {
+      csvInvalid: "The CSV is invalid",
+      csvInvalidUser: "The CSV failed validation",
       noId: "Overwrite requires field 'id'",
       hasId: "Create should not include field 'id'",
       importing: 'Error importing',
@@ -11,10 +13,11 @@ export default {
         "The 'resource' property was empty, did you pass in the {...props} to the ImportButton?",
     },
     alert: {
-      imported: 'Imported %{filename}',
+      imported: 'Imported %{fname}',
     },
     dialog: {
-      importTo: 'Import to',
+      importTo: 'Importing %{count} items to "%{resource}"',
+      copyOverwriteWarning: 'The destination %{resource} has %{count} with the same id',
       dataFileReq: 'Data file requirements',
       extension: "Must be a '.csv' or '.tsv' file",
       idColumnCreate: "Must not contain an 'id' column for new",
