@@ -48,7 +48,7 @@
     "react": "16.8.6",
     "react-admin": "3.x",
     "react-dom": "16.8.3",
-    "react-scripts": "^3.4.1",
+    "react-scripts": "^3.4.3",
     "source-map-loader": "^0.2.4",
     "ts-jest": "^24.x.x",
     "typescript": "3.x"

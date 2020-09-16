@@ -2,6 +2,7 @@
   "name": "test-ra",
   "version": "1.0.0",
   "scripts": {
+    "prestart": "node ./overrides/patch.js",
     "start": "PORT=4455 ../node_modules/.bin/react-scripts start",
     "build": "CI=false ../node_modules/.bin/react-scripts build && cp ./build/index.html ./build/404.html"
   },
