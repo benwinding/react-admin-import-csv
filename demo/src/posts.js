@@ -15,40 +15,33 @@ import {
   ShowButton,
   EditButton,
   DeleteButton,
-  downloadCSV,
 } from "react-admin";
-import jsonExport from "jsonexport/dist";
+
 // Change this import to: from "react-admin-import-csv"
 import { ImportButton } from "./build-watch";
 import { CreateButton, ExportButton } from "ra-ui-materialui";
 
-const defaultExporter = (posts) => {
-  jsonExport(
-    posts,
-    {
-      headers: ["id", "title"],
-    },
-    (err, csv) => {
-      downloadCSV(csv, "posts");
-    }
-  );
-};
-
-const ListActions = (props) => {
-  const { className, basePath } = props;
-
-  const config = {
-    logging: true,
-    postCommitCallback: (report) => console.log("Report", report),
-    disableImportNew: false,
-    disableImportOverwrite: false,
-  };
-
+const ListActions = props => {
+  const { 
+    className, 
+    basePath, 
+    total, 
+    resource, 
+    currentSort, 
+    filterValues, 
+    exporter 
+  } = props;
   return (
     <TopToolbar className={className}>
       <CreateButton basePath={basePath} />
-      <ImportButton {...props} {...config} />
-      <ExportButton exporter={defaultExporter} />
+      <ExportButton
+        disabled={total === 0}
+        resource={resource}
+        sort={currentSort}
+        filter={filterValues}
+        exporter={exporter}
+      />
+      <ImportButton {...props} />
     </TopToolbar>
   );
 };
