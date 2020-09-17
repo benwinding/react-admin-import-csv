@@ -210,7 +210,7 @@ export const ImportButton = (props: any) => {
             <span>{i18nProvider.translate('csv.dialog.cancel')}</span>
           </Button>
           <Button
-            disabled={!values || importing || disableImportNew}
+            disabled={!values || importing || disableImportNew || !!values && values.some((v) => v.id)}
             onClick={handleSubmitCreate}
             color='secondary'
             variant='contained'
@@ -219,7 +219,7 @@ export const ImportButton = (props: any) => {
             <span>{i18nProvider.translate('csv.dialog.importNew')}</span>
           </Button>
           <Button
-            disabled={!values || importing || disableImportOverwrite}
+            disabled={!values || importing || disableImportOverwrite || !!values && values.some((v) => !v.id)}
             onClick={handleSubmitOverwrite}
             color='primary'
             variant='contained'
