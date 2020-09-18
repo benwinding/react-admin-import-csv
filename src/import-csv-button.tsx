@@ -17,7 +17,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@material-ui/core";
-import { Done, FileCopy, Undo, Clear } from "@material-ui/icons";
+import { Done, FileCopy, Undo, Clear, Add } from "@material-ui/icons";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 import { ImportConfig } from "./config.interface";
@@ -27,7 +27,7 @@ import {
   GetCSVItems,
   GetIdsColliding,
 } from "./import-controller";
-import { create } from "./uploader";
+import { create, update } from "./uploader";
 
 export const BtnOption = (props: any) => {
   return (
@@ -107,6 +107,17 @@ export const ImportButton = (props: any) => {
     );
   }
 
+  async function updateRows(vals: any[]) {
+    return update(
+      logging,
+      dataProvider,
+      resourceName,
+      vals,
+      preCommitCallback,
+      postCommitCallback
+    );
+  }
+
   function clickImportButton() {
     resetVars();
     refInput.value = "";
@@ -174,8 +185,7 @@ export const ImportButton = (props: any) => {
       const valuesColliding = values.filter((item) =>
         collindingIdsSet.has(item.id)
       );
-      valuesColliding.map((v) => delete v.id);
-      await createRows(valuesColliding);
+      await updateRows(valuesColliding);
       handleClose();
     } catch (error) {
       setIsLoading(false);
@@ -188,39 +198,51 @@ export const ImportButton = (props: any) => {
     handleClose();
   };
 
-  const nextConflicting = () => {
-    const currentId = Array.isArray(idsConflicting) && idsConflicting.pop();
-    setIdsConflicting(idsConflicting);
-    const foundValue = values.filter((v) => v.id === currentId).pop();
-    logger.log("nextConflicting", { foundValue, currentId });
-    const isLast = !foundValue;
-    if (isLast) {
-      return true;
-    }
-    setCurrentValue(foundValue);
-  };
-
   const handleAskDecide = async () => {
     logger.log("handleAskDecide");
     setOpen(false);
     nextConflicting();
     setOpenAskDecide(true);
   };
+  
+  const nextConflicting = () => {
+    const currentId = Array.isArray(idsConflicting) && idsConflicting.pop();
+    setIdsConflicting(idsConflicting);
+    const foundValue = Array.isArray(values) && values.filter((v) => v.id === currentId).pop();
+    logger.log("nextConflicting", { foundValue, currentId });
+    const isLast = !foundValue;
+    if (!isLast) {
+      setCurrentValue(foundValue);
+    }
+    return foundValue && {...foundValue};
+  };
 
   const handleAskDecideReplace = async () => {
     logger.log("handleAskDecideReplace");
-    const isLast = nextConflicting();
-    if (isLast) {
-      handleClose();
+    const val = nextConflicting();
+    if (!val) {
+      return handleClose();
     }
+    await updateRows([val])
+  };
+
+  const handleAskDecideAddAsNew = async () => {
+    logger.log("handleAskDecideAddAsNew");
+    const val = nextConflicting();
+    if (!val) {
+      return handleClose();
+    }
+    delete val.id
+    await createRows([val])
   };
 
   const handleAskDecideSkip = async () => {
     logger.log("handleAskDecideSkip");
-    const isLast = nextConflicting();
-    if (isLast) {
-      handleClose();
+    const val = nextConflicting();
+    if (!val) {
+      return handleClose();
     }
+    createRows([val])
   };
 
   const handleAskDecideSkipAll = async () => {
@@ -373,8 +395,8 @@ export const ImportButton = (props: any) => {
               <div>
                 <p style={{ fontFamily: "sans-serif", margin: "0" }}>
                   The resource <strong>{resourceName}</strong> has{" "}
-                  <strong>{idsConflicting && idsConflicting.length}</strong>{" "}
-                  records with the same Ids
+                  <strong>{idsConflicting && idsConflicting.length + 1}</strong>{" "}
+                  more records with conflicting ids
                 </p>
                 <List>
                   <BtnOption
@@ -383,6 +405,11 @@ export const ImportButton = (props: any) => {
                     label={
                       "Replace the row id=" + (currentValue && currentValue.id)
                     }
+                  />
+                  <BtnOption
+                    onClick={handleAskDecideAddAsNew}
+                    icon={<Add htmlColor="#3a88ca" />}
+                    label="Add as new row (Don't replace)"
                   />
                   <BtnOption
                     onClick={handleAskDecideSkip}
