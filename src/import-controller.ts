@@ -18,12 +18,12 @@ export async function GetIdsColliding(
   resourceName: string,
 ): Promise<string[]> {
   const logger = makeLogger(logging);
-  const hasColliding = csvValues.some((v) => v.id);
-  if (!hasColliding) {
+  const hasIds = csvValues.some((v) => v.id);
+  if (!hasIds) {
     return [];
   }
   try {
-    const ids = csvValues.filter((v) => v.id);
+    const ids: string[] = csvValues.filter(v => !!v.id).map((v) => v.id+'');
     const recordsColliding = await dataProvider.getMany(resourceName, {
       ids: ids,
     });

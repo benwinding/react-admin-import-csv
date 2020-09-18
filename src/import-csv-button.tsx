@@ -1,5 +1,4 @@
 import React from "react";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import {
   Button as RAButton,
   useRefresh,
@@ -10,13 +9,17 @@ import {
 
 import {
   Button,
+  List,
+  ListItem,
   Tooltip,
   Dialog,
-  DialogActions,
+  CircularProgress,
   DialogContent,
   DialogTitle,
-  CircularProgress,
 } from "@material-ui/core";
+import { Done, FileCopy, Undo } from "@material-ui/icons";
+import GetAppIcon from "@material-ui/icons/GetApp";
+
 import { ImportConfig } from "./config.interface";
 import { SimpleLogger } from "./SimpleLogger";
 import {
@@ -26,6 +29,22 @@ import {
 } from "./import-controller";
 import { create } from "./uploader";
 
+export const BtnOption = (props: any) => {
+  return (
+    <ListItem disableGutters={true}>
+      <Button
+        style={{ width: "100%", backgroundColor: "#efefef", padding: "13px" }}
+        onClick={props.onClick}
+      >
+        {props.icon}
+        <span style={{ width: "100%", textAlign: "left", marginLeft: "8px" }}>
+          {props.label}
+        </span>
+      </Button>
+    </ListItem>
+  );
+};
+
 export const ImportButton = (props: any) => {
   const refresh = useRefresh();
   const translate = useTranslate();
@@ -34,8 +53,6 @@ export const ImportButton = (props: any) => {
   const {
     logging,
     parseConfig,
-    disableImportNew,
-    disableImportOverwrite,
     preCommitCallback,
     postCommitCallback,
     validateRow,
@@ -43,8 +60,6 @@ export const ImportButton = (props: any) => {
   let { variant, label, resource, resourceName } = props;
   const logger = new SimpleLogger("import-csv-button", true);
   logger.setEnabled(logging);
-
-  warnAboutRemovedFunctions(props);
 
   if (!resource) {
     throw new Error(translate("csv.error.emptyResource"));
@@ -63,25 +78,37 @@ export const ImportButton = (props: any) => {
   }
 
   const [open, setOpen] = React.useState(false);
-  const [openAsk, setOpenAsk] = React.useState(false);
-  const [importStatus, setImportStatus] = React.useState(null as string);
   const [values, setValues] = React.useState(null as any[]);
-  const [countTotalRows, setCountTotalRows] = React.useState(null as number);
-  const [countOverwrite, setCountOverwrite] = React.useState(null as number);
+  const [idsConflicting, setIdsConflicting] = React.useState(null as any[]);
+  const [isLoading, setIsLoading] = React.useState(null as boolean);
 
   const [fileName, setFileName] = React.useState(null as string);
-  const [errorTxt, setErrorTxt] = React.useState(null as string);
   let refInput: HTMLInputElement;
 
-  function logStatus(str: string) {
-    logger.log(str);
-    setImportStatus(str);
+  function resetVars() {
+    setOpen(false);
+    setValues(null);
+    setIdsConflicting(null);
+    setIsLoading(null);
+    setFileName(null);
   }
 
-  const clickImportButton = async () => {
+  async function createRows(vals: any[]) {
+    return create(
+      logging,
+      dataProvider,
+      resourceName,
+      vals,
+      preCommitCallback,
+      postCommitCallback
+    );
+  }
+
+  function clickImportButton() {
+    resetVars();
     refInput.value = "";
     refInput.click();
-  };
+  }
 
   const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
@@ -89,14 +116,14 @@ export const ImportButton = (props: any) => {
     setOpen(true);
     try {
       // Is valid csv
-      logStatus("Parsing CSV file");
+      logger.log("Parsing CSV file");
       const csvItems = await GetCSVItems(logging, translate, file, parseConfig);
-      // Does CSV pass user validation
-      logStatus("Validating CSV file");
-      await CheckCSVValidation(logging, translate, csvItems, validateRow);
       setValues(csvItems);
+      // Does CSV pass user validation
+      logger.log("Validating CSV file");
+      await CheckCSVValidation(logging, translate, csvItems, validateRow);
       // Are there any import overwrites?
-      logStatus("Checking rows to import");
+      logger.log("Checking rows to import");
       const collidingIds = await GetIdsColliding(
         logging,
         translate,
@@ -104,52 +131,67 @@ export const ImportButton = (props: any) => {
         csvItems,
         resourceName
       );
+      setIdsConflicting(collidingIds);
       const hasCollidingIds = !!collidingIds.length;
-      setCountOverwrite(collidingIds.length);
+      logger.log("Is has colliding ids?", { hasCollidingIds, collidingIds });
       if (hasCollidingIds) {
         // Ask Replace X Rows? Skip these rows? Decied For Each?
-        logStatus("Ask Replace X Rows?" + hasCollidingIds);
-        setOpenAsk(true);
-      } else {
-        await create(
-          logging,
-          dataProvider,
-          resourceName,
-          csvItems,
-          preCommitCallback,
-          postCommitCallback
+        const collindingIdsSet = new Set(collidingIds.map((id) => id + ""));
+        const csvItemsNotColliding = csvItems.filter(
+          (item) => !collindingIdsSet.has(item.id)
         );
-        handleClose()
+        logger.log("Importing items which arent colliding", {
+          csvItemsNotColliding,
+        });
+        await createRows(csvItemsNotColliding);
+      } else {
+        await createRows(csvItems);
+        handleClose();
       }
       // Begin Import
     } catch (error) {
-      logStatus("");
-      setErrorTxt(error.toString());
+      resetVars();
+      logger.error(error);
     }
   };
 
   const notify = useNotify();
   const handleClose = () => {
-    setOpen(false);
+    resetVars();
     notify("csv.alert.imported");
-    setValues(null);
-    setFileName(null);
     refresh();
   };
 
-  const handleAskClose = () => {
-    setOpen(false);
-    setFileName(null as string);
+  const handleReplace = async () => {
+    logger.log("handleReplace");
+    try {
+      setIsLoading(true);
+      await new Promise((res) => setTimeout(res, 100000));
+      const collindingIdsSet = new Set(idsConflicting.map((id) => id + ""));
+      const valuesColliding = values.filter((item) =>
+        collindingIdsSet.has(item.id)
+      );
+      valuesColliding.map((v) => delete v.id);
+      await createRows(valuesColliding);
+      handleClose();
+    } catch (error) {
+      setIsLoading(false);
+      logger.error("handleReplace", error);
+    }
   };
 
-  const handleReplace = () => {};
+  const handleSkip = () => {
+    logger.log("handleSkip");
+    handleClose();
+  };
 
-  const handleSkip = () => {};
-
-  const handleAskDecide = () => {};
+  const handleAskDecide = () => {
+    logger.log("handleAskDecide");
+  };
 
   return (
     <>
+      {/* IMPORT BUTTON */}
       <Tooltip title={translate("csv.dialog.extension")}>
         <div>
           <RAButton
@@ -173,30 +215,7 @@ export const ImportButton = (props: any) => {
         </div>
       </Tooltip>
 
-      <Dialog
-        open={openAsk}
-        onClose={handleAskClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          Replace or Skip Records
-        </DialogTitle>
-        <DialogContent>
-          <div>
-            <Button onClick={handleReplace}>
-              <span>Replace the rows</span>
-            </Button>
-            <Button onClick={handleSkip}>
-              <span>Skip these rows</span>
-            </Button>
-            <Button onClick={handleAskDecide}>
-              <span>Let me decide for each row</span>
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-
+      {/* IMPORT DIALOG */}
       <Dialog
         open={open}
         onClose={handleClose}
@@ -204,58 +223,70 @@ export const ImportButton = (props: any) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {translate("csv.dialog.importTo", {
-            resource: resourceName,
-            count: countTotalRows,
-          })}
+          Importing to {resourceName}
         </DialogTitle>
         <DialogContent>
-          <div
-            id="alert-dialog-description"
-            style={{ fontFamily: "sans-serif" }}
-          >
-            <p style={{ margin: "0px" }}>
-              file: <strong>{fileName}</strong>
-              rows: <strong>{countTotalRows}</strong>
+          <div style={{ width: "400px", maxWidth: "100%" }}>
+            <p
+              style={{
+                fontFamily: "sans-serif",
+                margin: "0",
+                fontSize: "0.9em",
+                marginBottom: "10px",
+                marginTop: "-7px",
+                color: "#555",
+              }}
+            >
+              Importing {values && values.length} items from '{fileName}' to{" "}
+              {resourceName}
             </p>
-
-            <p style={{ margin: "0px" }}>Status</p>
-            {!!importStatus && <p>{importStatus}</p>}
-
-            {!!errorTxt && (
-              <div>
-                <p>Error:</p>
-                <p style={{ margin: "0px", color: "red" }}>{errorTxt}</p>
+            {isLoading && (
+              <div
+                style={{
+                  textAlign: "center",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                }}
+              >
+                <CircularProgress variant={"indeterminate"} />
+                <p
+                  style={{
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  Loading...
+                </p>
               </div>
             )}
-            <pre>
-            {JSON.stringify(values, null, 2) }
-            </pre>
+            {idsConflicting && idsConflicting.length > 0 && !isLoading && (
+              <div>
+                <p style={{ fontFamily: "sans-serif", margin: "0" }}>
+                  The resource <strong>{resourceName}</strong> has{" "}
+                  <strong>{idsConflicting && idsConflicting.length}</strong>{" "}
+                  records with the same Ids
+                </p>
+                <List>
+                  <BtnOption
+                    onClick={handleReplace}
+                    icon={<Done htmlColor="#29c130" />}
+                    label="Replace the rows"
+                  />
+                  <BtnOption
+                    onClick={handleSkip}
+                    icon={<FileCopy htmlColor="#3a88ca" />}
+                    label="Skip these rows"
+                  />
+                  <BtnOption
+                    onClick={handleAskDecide}
+                    icon={<Undo htmlColor="black" />}
+                    label="Let me decide for each row"
+                  />
+                </List>
+              </div>
+            )}
           </div>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>
-            <span>{translate("csv.dialog.cancel")}</span>
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );
 };
-
-function warnAboutRemovedFunctions(props) {
-  const logger = new SimpleLogger("import-csv-button warning", true);
-  const oldRemovedProps = [
-    "disableImportNew",
-    "disableImportOverwrite",
-    "postCommitCallback",
-    "preCommitCallback",
-  ];
-  oldRemovedProps.map((oldRemovedProp) => {
-    if (props[oldRemovedProp]) {
-      logger.warn(
-        `The setting: "${oldRemovedProp}" has been removed from the "react-admin-import-csv" package, goto https://github.com/benwinding/react-admin-import-csv for the updated API`
-      );
-    }
-  });
-}
