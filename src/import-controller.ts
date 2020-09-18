@@ -27,7 +27,7 @@ export async function GetIdsColliding(
     const recordsColliding = await dataProvider.getMany(resourceName, {
       ids: ids,
     });
-    const recordIdsColliding = recordsColliding.data.map((r) => r.id as string);
+    const recordIdsColliding = recordsColliding.data.map((r) => r.id + '' as string);
     return recordIdsColliding;
   } catch (error) {
     logger.error("GetIdsColliding", { csvValues }, error);

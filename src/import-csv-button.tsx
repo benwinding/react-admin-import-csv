@@ -17,7 +17,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@material-ui/core";
-import { Done, FileCopy, Undo } from "@material-ui/icons";
+import { Done, FileCopy, Undo, Clear } from "@material-ui/icons";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 import { ImportConfig } from "./config.interface";
@@ -78,15 +78,18 @@ export const ImportButton = (props: any) => {
   }
 
   const [open, setOpen] = React.useState(false);
+  const [openAskDecide, setOpenAskDecide] = React.useState(false);
   const [values, setValues] = React.useState(null as any[]);
   const [idsConflicting, setIdsConflicting] = React.useState(null as any[]);
   const [isLoading, setIsLoading] = React.useState(null as boolean);
+  const [currentValue, setCurrentValue] = React.useState(null as any);
 
   const [fileName, setFileName] = React.useState(null as string);
   let refInput: HTMLInputElement;
 
   function resetVars() {
     setOpen(false);
+    setOpenAskDecide(false);
     setValues(null);
     setIdsConflicting(null);
     setIsLoading(null);
@@ -136,7 +139,7 @@ export const ImportButton = (props: any) => {
       logger.log("Is has colliding ids?", { hasCollidingIds, collidingIds });
       if (hasCollidingIds) {
         // Ask Replace X Rows? Skip these rows? Decied For Each?
-        const collindingIdsSet = new Set(collidingIds.map((id) => id + ""));
+        const collindingIdsSet = new Set(collidingIds.map((id) => id));
         const csvItemsNotColliding = csvItems.filter(
           (item) => !collindingIdsSet.has(item.id)
         );
@@ -166,8 +169,8 @@ export const ImportButton = (props: any) => {
     logger.log("handleReplace");
     try {
       setIsLoading(true);
-      await new Promise((res) => setTimeout(res, 100000));
-      const collindingIdsSet = new Set(idsConflicting.map((id) => id + ""));
+      await new Promise((res) => setTimeout(res, 1000));
+      const collindingIdsSet = new Set(idsConflicting.map((id) => id));
       const valuesColliding = values.filter((item) =>
         collindingIdsSet.has(item.id)
       );
@@ -185,8 +188,44 @@ export const ImportButton = (props: any) => {
     handleClose();
   };
 
-  const handleAskDecide = () => {
+  const nextConflicting = () => {
+    const currentId = Array.isArray(idsConflicting) && idsConflicting.pop();
+    setIdsConflicting(idsConflicting);
+    const foundValue = values.filter((v) => v.id === currentId).pop();
+    logger.log("nextConflicting", { foundValue, currentId });
+    const isLast = !foundValue;
+    if (isLast) {
+      return true;
+    }
+    setCurrentValue(foundValue);
+  };
+
+  const handleAskDecide = async () => {
     logger.log("handleAskDecide");
+    setOpen(false);
+    nextConflicting();
+    setOpenAskDecide(true);
+  };
+
+  const handleAskDecideReplace = async () => {
+    logger.log("handleAskDecideReplace");
+    const isLast = nextConflicting();
+    if (isLast) {
+      handleClose();
+    }
+  };
+
+  const handleAskDecideSkip = async () => {
+    logger.log("handleAskDecideSkip");
+    const isLast = nextConflicting();
+    if (isLast) {
+      handleClose();
+    }
+  };
+
+  const handleAskDecideSkipAll = async () => {
+    logger.log("handleAskDecideSkipAll");
+    handleClose();
   };
 
   return (
@@ -280,6 +319,80 @@ export const ImportButton = (props: any) => {
                     onClick={handleAskDecide}
                     icon={<Undo htmlColor="black" />}
                     label="Let me decide for each row"
+                  />
+                </List>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+      {/* IMPORT ASK DECIDE */}
+      <Dialog
+        open={openAskDecide}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Importing id {currentValue && currentValue.id} to {resourceName}
+        </DialogTitle>
+        <DialogContent>
+          <div style={{ width: "400px", maxWidth: "100%" }}>
+            <p
+              style={{
+                fontFamily: "sans-serif",
+                margin: "0",
+                fontSize: "0.9em",
+                marginBottom: "10px",
+                marginTop: "-7px",
+                color: "#555",
+              }}
+            >
+              Importing {values && values.length} items from '{fileName}' to{" "}
+              {resourceName}
+            </p>
+            {isLoading && (
+              <div
+                style={{
+                  textAlign: "center",
+                  paddingTop: "10px",
+                  paddingBottom: "10px",
+                }}
+              >
+                <CircularProgress variant={"indeterminate"} />
+                <p
+                  style={{
+                    fontFamily: "sans-serif",
+                  }}
+                >
+                  Loading...
+                </p>
+              </div>
+            )}
+            {!isLoading && (
+              <div>
+                <p style={{ fontFamily: "sans-serif", margin: "0" }}>
+                  The resource <strong>{resourceName}</strong> has{" "}
+                  <strong>{idsConflicting && idsConflicting.length}</strong>{" "}
+                  records with the same Ids
+                </p>
+                <List>
+                  <BtnOption
+                    onClick={handleAskDecideReplace}
+                    icon={<Done htmlColor="#29c130" />}
+                    label={
+                      "Replace the row id=" + (currentValue && currentValue.id)
+                    }
+                  />
+                  <BtnOption
+                    onClick={handleAskDecideSkip}
+                    icon={<Undo htmlColor="black" />}
+                    label="Skip this row (Don't replace)"
+                  />
+                  <BtnOption
+                    onClick={handleAskDecideSkipAll}
+                    icon={<Clear htmlColor="#3a88ca" />}
+                    label="Cancel"
                   />
                 </List>
               </div>
