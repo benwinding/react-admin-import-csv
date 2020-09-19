@@ -86,8 +86,8 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: build-esm
-    - name: Build Demo
-      run: npm run-script build
+    - run: npm run-script build-for-demo
+    - run: npm run-script build
       working-directory: ./demo
     - name: Deploy 🚀
       if: github.ref == 'refs/heads/master'
