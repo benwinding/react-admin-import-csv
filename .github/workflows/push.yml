@@ -1,58 +1,91 @@
-on: push
+on: 
+  push: 
+    branches: 
+      - master
+
 name: Build and Publish
 jobs:
   build:
-    name: Build
+    name: Build Library
+    if: "contains(github.event.head_commit.message, 'ci-deploy')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Use Node.js 10.17
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
         node-version: 10.17
-    - name: Cache node_modules
+    - uses: actions/cache@v1
       id: cache-modules
-      uses: actions/cache@v1
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-    - name: Install Dependencies
+    - run: npm install
       if: steps.cache-modules.outputs.cache-hit != 'true'
-      run: npm install
-    - name: Build Library
-      run: npm run-script build
-    - name: Test
-      run: npm run-script test
-    - name: Generate Coverage Badges
-      if: github.ref == 'refs/heads/master'
-      run: npm run-script test:badges
+    - run: npm run-script build
+    - run: npm run-script test
+    - run: npm run-script test:badges
+    - name: Upload esm build artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-esm
+        path: esm
+    - name: Upload lib build artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-lib
+        path: lib
+
+  deploy:
+    needs: build
+    name: Deploy Library
+    if: "contains(github.event.head_commit.message, 'ci-deploy')"
+    runs-on: ubuntu-latest
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@v1
+      with:
+        node-version: 10.17
+    - uses: actions/cache@v1
+      id: cache-modules
+      with:
+        path: node_modules
+        key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+    - name: Download build-lib
+      uses: actions/download-artifact@v2
+      with:
+        name: build-lib
+    - name: Download build-esm
+      uses: actions/download-artifact@v2
+      with:
+        name: build-esm
     - name: Deploy to NPM! 🚀
-      if: github.ref == 'refs/heads/master'
       uses: benwinding/merge-release@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
   demo:
-    name: Build Demo
+    needs: build
+    name: Deploy Demo
+    if: "contains(github.event.head_commit.message, 'ci-deploy')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name: Use Node.js 10.17
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
         node-version: 10.17
-    - name: Cache node_modules
+    - uses: actions/cache@v1
       id: cache-modules
-      uses: actions/cache@v1
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-    - name: Install Dependencies
-      if: steps.cache-modules.outputs.cache-hit != 'true'
-      run: npm install
-    - name: Build Library
-      run: npm run-script build-for-demo
+    - name: Download build-lib
+      uses: actions/download-artifact@v2
+      with:
+        name: build-lib
+    - name: Download build-esm
+      uses: actions/download-artifact@v2
+      with:
+        name: build-esm
     - name: Build Demo
       run: npm run-script build
       working-directory: ./demo
