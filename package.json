@@ -23,6 +23,7 @@
     "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
     "test": "jest --collectCoverage",
     "test:watch": "jest --watch",
+    "test:silent": "npx jest 2>&1 | grep '●'",
     "test:badges": "jest-coverage-badges",
     "clean": "rimraf dist"
   },

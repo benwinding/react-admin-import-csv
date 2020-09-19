@@ -48,52 +48,52 @@ const expectUpdate = (onUpdate, onReport = null) => expectOperation('update', on
 
 describe("import csv button", () => {
   describe("with reporting", () => {
-    test("happy path create", done => {
-      expectCreate(
-        defaults.create.success,
-        report => {
-           expect(report).toHaveLength(5)
-           expect(report.filter(r => r.success)).toHaveLength(5)
-           done()
-        })
-    });
+    // test("happy path create", done => {
+    //   expectCreate(
+    //     defaults.create.success,
+    //     report => {
+    //        expect(report).toHaveLength(5)
+    //        expect(report.filter(r => r.success)).toHaveLength(5)
+    //        done()
+    //     })
+    // });
     
-    test("happy path update", done => {
-      expectUpdate(
-        defaults.update.success,
-        report => {
-           expect(report).toHaveLength(5)
-           expect(report.filter(r => r.success)).toHaveLength(5)
-           done()
-        })
-    })
-    test("server error path create", done => {
-      expectCreate(
-        defaults.create.failure,
-        report => {
-           expect(report.filter(r => r.success)).toHaveLength(4)
-           expect(report.filter(r => !r.success)).toHaveLength(1)
-           done()
-        })
-    })
+    // test("happy path update", done => {
+    //   expectUpdate(
+    //     defaults.update.success,
+    //     report => {
+    //        expect(report).toHaveLength(5)
+    //        expect(report.filter(r => r.success)).toHaveLength(5)
+    //        done()
+    //     })
+    // })
+    // test("server error path create", done => {
+    //   expectCreate(
+    //     defaults.create.failure,
+    //     report => {
+    //        expect(report.filter(r => r.success)).toHaveLength(4)
+    //        expect(report.filter(r => !r.success)).toHaveLength(1)
+    //        done()
+    //     })
+    // })
 
-    test("server error path update", done => {
-      expectUpdate(
-        defaults.update.failure,
-        report => {
-           expect(report.filter(r => r.success)).toHaveLength(4)
-           expect(report.filter(r => !r.success)).toHaveLength(1)
-           done()
-        })
+    // test("server error path update", done => {
+    //   expectUpdate(
+    //     defaults.update.failure,
+    //     report => {
+    //        expect(report.filter(r => r.success)).toHaveLength(4)
+    //        expect(report.filter(r => !r.success)).toHaveLength(1)
+    //        done()
+    //     })
     
-    })
+    // })
   })
 
   describe("without reporting", () => {
 
-    test("happy path create", () => expectCreate(defaults.create.success))
+    // test("happy path create", () => expectCreate(defaults.create.success))
 
-    test("happy path update", () => expectUpdate(defaults.update.success))
+    // test("happy path update", () => expectUpdate(defaults.update.success))
 
     test("server error path create", done => {
       expectCreate(defaults.create.failure)
