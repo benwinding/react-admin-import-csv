@@ -10,7 +10,7 @@
 
 CSV import button for react-admin.
 
-![image](https://i.imgur.com/HeBEe3C.gif)
+![image](https://user-images.githubusercontent.com/11782590/93659721-83622e00-fa87-11ea-90c4-650aecf60a6a.gif)
 
 ## Usage
 
@@ -111,7 +111,9 @@ const config: ImportConfig = {
   // A function to translate the CSV rows on import 
   preCommitCallback?: (action: "create" | "overwrite", values: any[]) => any[];
   // A function to handle row errors after import
-  postCommitCallback?: ([]) => any[];
+  postCommitCallback?: (error: any) => void;
+  // Async function to Validate a row, reject the promise if it's not valid
+  validateRow?: (csvRowItem: any) => Promise<void>;
   // Any option from the "papaparse" library 
   parseConfig?: {
     // SEE: https://www.papaparse.com/docs#config
