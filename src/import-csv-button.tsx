@@ -172,7 +172,7 @@ export const ImportButton = (props: any) => {
   const notify = useNotify();
   const handleClose = () => {
     resetVars();
-    notify("csv.alert.imported");
+    notify(translate("csv.alert.imported", {fname: fileName}));
     refresh();
   };
 
