@@ -138,7 +138,7 @@ import { resolveBrowserLocale, useLocale } from "react-admin";
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import englishMessages from "ra-language-english";
 // This package's translations
-import * as domainMessages from "./build-watch/i18n";
+import * as domainMessages from "react-admin-import-csv/i18n";
 
 // Select locale based on react-admin OR browser
 const locale = useLocale() || resolveBrowserLocale();
