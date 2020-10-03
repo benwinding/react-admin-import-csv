@@ -1,8 +1,7 @@
-import { useNotify, Translate, DataProvider } from "ra-core";
+import { Translate, DataProvider } from "ra-core";
 import { processCsvFile } from "./csv-extractor";
-import { create, update } from "./uploader";
 import { SimpleLogger } from "./SimpleLogger";
-import { PrecommitCallback, ValidateRowFunction } from "./config.interface";
+import { ValidateRowFunction } from "./config.interface";
 
 function makeLogger(logging: boolean) {
   const logger = new SimpleLogger("import-controller", true);
@@ -31,7 +30,7 @@ export async function GetIdsColliding(
     return recordIdsColliding;
   } catch (error) {
     logger.error("GetIdsColliding", { csvValues }, error);
-    throw translate("csv.error.csvInvalidUser");
+    throw translate("csv.parsing.collidingIds");
   }
 }
 
@@ -49,7 +48,7 @@ export async function CheckCSVValidation(
     await Promise.all(csvValues.map((v) => validateRow(v)));
   } catch (error) {
     logger.error("onFileAdded", { csvValues }, error);
-    throw translate("csv.error.csvInvalidUser");
+    throw translate("csv.parsing.failedValidateRow");
   }
 }
 
@@ -66,6 +65,6 @@ export async function GetCSVItems(
     return csvValues;
   } catch (error) {
     logger.error("onFileAdded", { csvValues }, error);
-    throw translate("csv.error.csvInvalid");
+    throw translate("csv.parsing.invalidCsvDocument");
   }
 }
