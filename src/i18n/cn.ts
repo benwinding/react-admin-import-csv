@@ -1,30 +1,41 @@
 export default {
   csv: {
-    main: {
-      import: '导入',
-    },
-    error: {
-      noId: "覆盖更新记录时，必须包含'id'字段",
-      hasId: "创建新记录时，不能包含id字段",
-      importing: '导入时发生错误',
+    buttonMain: {
+      label: "进口",
+      tooltip: "必须是“ .csv”或“ .tsv”文件",
       emptyResource:
-        "'resource' 属性为空,你是否将{...props}设置到ImportButton了?",
+        "'resource'属性为空，您是否将{... props}传递给ImportButton？",
     },
-    alert: {
-      imported: '导入完成 %{filename}',
+    parsing: {
+      collidingIds: '找到冲突的“ id”字段',
+      failedValidateRow: 'CSV未能通过验证要求',
+      invalidCsv: '该文档无法解析为“ csv”文件',
     },
-    dialog: {
-      importTo: '导入到',
-      dataFileReq: '数据文件要求',
-      extension: "导入只支持'.csv' 或 '.tsv'的文件类型",
-      idColumnCreate: "新增时不能包含'id'的列",
-      idColumnUpdate: "更新时必须包含'id'的列",
-      chooseFile: '选择文件',
-      processed: '处理',
-      rowCount: '记录合计',
-      cancel: '取消',
-      importNew: '新增导入',
-      importOverride: '更新导入 ',
+    dialogCommon: {
+      subtitle: '将％{count}个项目从％{fileName}导入到“％{resource}”',
+      conflictCount:
+      "资源<strong>％{resource} </ strong>的ID冲突的记录还有<strong>％{conflictingCount} </ strong>个记录",
+      buttons: {
+        cancel: "取消",
+      }
     },
+    dialogImport: {
+      alertClose: "导入的％{fname}",
+      title: '导入到“％{resource}”',
+      buttons: {
+        replaceAllConflicts: "替换行",
+        skipAllConflicts: "跳过这些行",
+        letmeDecide: "让我为每一行决定",
+      },
+    },
+    dialogDecide: {
+      title: '将ID％{id}导入“％{resource}”',
+      buttons: {
+        replaceRow: "替换行id =％{id}",
+        addAsNewRow: "添加为新行（请勿替换）",
+        skipDontReplace: "跳过此行（请勿替换）",
+      },
+    },
+    loading: "载入中...",
   },
 };

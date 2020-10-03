@@ -28,7 +28,7 @@ const App = () => {
   };
   const i18nProvider = polyglotI18nProvider(
     (locale) => (messages[locale] ? messages[locale] : messages.en),
-    locale || resolveBrowserLocale()
+    locale || resolveBrowserLocale()  
   );
 
   return (

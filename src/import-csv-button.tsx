@@ -62,11 +62,11 @@ export const ImportButton = (props: any) => {
   logger.setEnabled(logging);
 
   if (!resource) {
-    throw new Error(translate("csv.error.emptyResource"));
+    throw new Error(translate("csv.buttonMain.emptyResource"));
   }
 
   if (!label) {
-    label = translate("csv.main.import");
+    label = translate("csv.buttonMain.label");
   }
 
   if (!variant) {
@@ -172,7 +172,7 @@ export const ImportButton = (props: any) => {
   const notify = useNotify();
   const handleClose = () => {
     resetVars();
-    notify(translate("csv.alert.imported", {fname: fileName}));
+    notify(translate("csv.dialogImport.alertClose", { fname: fileName }));
     refresh();
   };
 
@@ -204,17 +204,18 @@ export const ImportButton = (props: any) => {
     nextConflicting();
     setOpenAskDecide(true);
   };
-  
+
   const nextConflicting = () => {
     const currentId = Array.isArray(idsConflicting) && idsConflicting.pop();
     setIdsConflicting(idsConflicting);
-    const foundValue = Array.isArray(values) && values.filter((v) => v.id === currentId).pop();
+    const foundValue =
+      Array.isArray(values) && values.filter((v) => v.id === currentId).pop();
     logger.log("nextConflicting", { foundValue, currentId });
     const isLast = !foundValue;
     if (!isLast) {
       setCurrentValue(foundValue);
     }
-    return foundValue && {...foundValue};
+    return foundValue && { ...foundValue };
   };
 
   const handleAskDecideReplace = async () => {
@@ -223,7 +224,7 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    await updateRows([val])
+    await updateRows([val]);
   };
 
   const handleAskDecideAddAsNew = async () => {
@@ -232,8 +233,8 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    delete val.id
-    await createRows([val])
+    delete val.id;
+    await createRows([val]);
   };
 
   const handleAskDecideSkip = async () => {
@@ -242,7 +243,7 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    createRows([val])
+    createRows([val]);
   };
 
   const handleAskDecideSkipAll = async () => {
@@ -253,7 +254,7 @@ export const ImportButton = (props: any) => {
   return (
     <>
       {/* IMPORT BUTTON */}
-      <Tooltip title={translate("csv.dialog.extension")}>
+      <Tooltip title={translate("csv.buttonMain.tooltip")}>
         <div>
           <RAButton
             color="primary"
@@ -277,156 +278,164 @@ export const ImportButton = (props: any) => {
       </Tooltip>
 
       {/* IMPORT DIALOG */}
-      <Dialog
+      <MyDialog
+        title={translate("csv.dialogImport.title", {
+          resource: resourceName,
+        })}
+        subTitle={translate("csv.dialogCommon.subtitle", {
+          count: values && values.length,
+          fileName: fileName,
+          resource: resourceName,
+        })}
         open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        resourceName={resourceName}
+        handleClose={handleClose}
       >
-        <DialogTitle id="alert-dialog-title">
-          Importing to {resourceName}
-        </DialogTitle>
-        <DialogContent>
-          <div style={{ width: "400px", maxWidth: "100%" }}>
+        {isLoading && <MyLoader></MyLoader>}
+        {idsConflicting && idsConflicting.length > 0 && !isLoading && (
+          <div>
             <p
-              style={{
-                fontFamily: "sans-serif",
-                margin: "0",
-                fontSize: "0.9em",
-                marginBottom: "10px",
-                marginTop: "-7px",
-                color: "#555",
+              style={{ fontFamily: "sans-serif", margin: "0" }}
+              dangerouslySetInnerHTML={{
+                __html: translate("csv.dialogCommon.conflictCount", {
+                  resource: resourceName,
+                  conflictingCount: idsConflicting && idsConflicting.length + 1,
+                }),
               }}
-            >
-              Importing {values && values.length} items from '{fileName}' to{" "}
-              {resourceName}
-            </p>
-            {isLoading && (
-              <div
-                style={{
-                  textAlign: "center",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                }}
-              >
-                <CircularProgress variant={"indeterminate"} />
-                <p
-                  style={{
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  Loading...
-                </p>
-              </div>
-            )}
-            {idsConflicting && idsConflicting.length > 0 && !isLoading && (
-              <div>
-                <p style={{ fontFamily: "sans-serif", margin: "0" }}>
-                  The resource <strong>{resourceName}</strong> has{" "}
-                  <strong>{idsConflicting && idsConflicting.length}</strong>{" "}
-                  records with the same Ids
-                </p>
-                <List>
-                  <BtnOption
-                    onClick={handleReplace}
-                    icon={<Done htmlColor="#29c130" />}
-                    label="Replace the rows"
-                  />
-                  <BtnOption
-                    onClick={handleSkip}
-                    icon={<FileCopy htmlColor="#3a88ca" />}
-                    label="Skip these rows"
-                  />
-                  <BtnOption
-                    onClick={handleAskDecide}
-                    icon={<Undo htmlColor="black" />}
-                    label="Let me decide for each row"
-                  />
-                </List>
-              </div>
-            )}
+            ></p>
+            <List>
+              <BtnOption
+                onClick={handleReplace}
+                icon={<Done htmlColor="#29c130" />}
+                label={translate("csv.dialogImport.buttons.replaceAllConflicts")}
+              />
+              <BtnOption
+                onClick={handleSkip}
+                icon={<FileCopy htmlColor="#3a88ca" />}
+                label={translate("csv.dialogImport.buttons.skipAllConflicts")}
+              />
+              <BtnOption
+                onClick={handleAskDecide}
+                icon={<Undo htmlColor="black" />}
+                label={translate("csv.dialogImport.buttons.letmeDecide")}
+              />
+            </List>
           </div>
-        </DialogContent>
-      </Dialog>
+        )}
+      </MyDialog>
       {/* IMPORT ASK DECIDE */}
-      <Dialog
+      <MyDialog
+        title={translate("csv.dialogDecide.title", {
+          id: currentValue && currentValue.id,
+          resource: resourceName,
+        })}
+        subTitle={translate("csv.dialogCommon.subtitle", {
+          count: values && values.length,
+          fileName: fileName,
+          resource: resourceName,
+        })}
         open={openAskDecide}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        resourceName={resourceName}
+        handleClose={handleClose}
       >
-        <DialogTitle id="alert-dialog-title">
-          Importing id {currentValue && currentValue.id} to {resourceName}
-        </DialogTitle>
-        <DialogContent>
-          <div style={{ width: "400px", maxWidth: "100%" }}>
+        {isLoading && <MyLoader></MyLoader>}
+        {!isLoading && (
+          <div>
             <p
-              style={{
-                fontFamily: "sans-serif",
-                margin: "0",
-                fontSize: "0.9em",
-                marginBottom: "10px",
-                marginTop: "-7px",
-                color: "#555",
+              style={{ fontFamily: "sans-serif", margin: "0" }}
+              dangerouslySetInnerHTML={{
+                __html: translate("csv.dialogCommon.conflictCount", {
+                  resource: resourceName,
+                  conflictingCount: idsConflicting && idsConflicting.length + 1,
+                }),
               }}
-            >
-              Importing {values && values.length} items from '{fileName}' to{" "}
-              {resourceName}
-            </p>
-            {isLoading && (
-              <div
-                style={{
-                  textAlign: "center",
-                  paddingTop: "10px",
-                  paddingBottom: "10px",
-                }}
-              >
-                <CircularProgress variant={"indeterminate"} />
-                <p
-                  style={{
-                    fontFamily: "sans-serif",
-                  }}
-                >
-                  Loading...
-                </p>
-              </div>
-            )}
-            {!isLoading && (
-              <div>
-                <p style={{ fontFamily: "sans-serif", margin: "0" }}>
-                  The resource <strong>{resourceName}</strong> has{" "}
-                  <strong>{idsConflicting && idsConflicting.length + 1}</strong>{" "}
-                  more records with conflicting ids
-                </p>
-                <List>
-                  <BtnOption
-                    onClick={handleAskDecideReplace}
-                    icon={<Done htmlColor="#29c130" />}
-                    label={
-                      "Replace the row id=" + (currentValue && currentValue.id)
-                    }
-                  />
-                  <BtnOption
-                    onClick={handleAskDecideAddAsNew}
-                    icon={<Add htmlColor="#3a88ca" />}
-                    label="Add as new row (Don't replace)"
-                  />
-                  <BtnOption
-                    onClick={handleAskDecideSkip}
-                    icon={<Undo htmlColor="black" />}
-                    label="Skip this row (Don't replace)"
-                  />
-                  <BtnOption
-                    onClick={handleAskDecideSkipAll}
-                    icon={<Clear htmlColor="#3a88ca" />}
-                    label="Cancel"
-                  />
-                </List>
-              </div>
-            )}
+            ></p>
+            <List>
+              <BtnOption
+                onClick={handleAskDecideReplace}
+                icon={<Done htmlColor="#29c130" />}
+                label={translate("csv.dialogDecide.buttons.replaceRow", {
+                  id: currentValue && currentValue.id,
+                })}
+              />
+              <BtnOption
+                onClick={handleAskDecideAddAsNew}
+                icon={<Add htmlColor="#3a88ca" />}
+                label={translate("csv.dialogDecide.buttons.addAsNewRow")}
+              />
+              <BtnOption
+                onClick={handleAskDecideSkip}
+                icon={<Undo htmlColor="black" />}
+                label={translate("csv.dialogDecide.buttons.skipDontReplace")}
+              />
+              <BtnOption
+                onClick={handleAskDecideSkipAll}
+                icon={<Clear htmlColor="#3a88ca" />}
+                label={translate("csv.dialogCommon.buttons.cancel")}
+              />
+            </List>
           </div>
-        </DialogContent>
-      </Dialog>
+        )}
+      </MyDialog>
     </>
   );
 };
+
+function MyDialog(props: {
+  open: boolean;
+  title: string;
+  subTitle: string;
+  resourceName: string;
+  handleClose: () => any;
+  children?: any;
+}) {
+  return (
+    <Dialog
+      open={props.open}
+      onClose={props.handleClose}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{props.title}</DialogTitle>
+      <DialogContent>
+        <div style={{ width: "400px", maxWidth: "100%" }}>
+          <p
+            style={{
+              fontFamily: "sans-serif",
+              margin: "0",
+              fontSize: "0.9em",
+              marginBottom: "10px",
+              marginTop: "-7px",
+              color: "#555",
+            }}
+          >
+            {props.subTitle}
+          </p>
+          {props.children}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function MyLoader() {
+  const translate = useTranslate();
+  return (
+    <div
+      style={{
+        textAlign: "center",
+        paddingTop: "10px",
+        paddingBottom: "10px",
+      }}
+    >
+      <CircularProgress variant={"indeterminate"} />
+      <p
+        style={{
+          fontFamily: "sans-serif",
+        }}
+      >
+        {translate("csv.loading")}
+      </p>
+    </div>
+  );
+}
