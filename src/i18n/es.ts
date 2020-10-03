@@ -1,30 +1,41 @@
 export default {
   csv: {
-    main: {
-      import: 'Importar',
-    },
-    error: {
-      noId: "Sobrescribir requiere el campo 'id'",
-      hasId: "Crear no debe incluir el campo 'id'",
-      importing: 'Error al importar',
+    buttonMain: {
+      label: "Importar",
+      tooltip: "Debe ser un archivo '.csv' o '.tsv'",
       emptyResource:
-        "La propiedad 'resource' esta vacia. ¿Fue pasada {...props} al componente `ImportButton`?",
+        "La propiedad 'resource' estaba vacía, ¿pasó el {... props} al Importar Botón?",
     },
-    alert: {
-      imported: 'Importado %{filename}',
+    parsing: {
+      collidingIds: 'Se encontraron campos de "id" en conflicto',
+      failedValidateRow: 'CSV no cumplió con los requisitos de validación',
+      invalidCsv: 'El documento no se pudo analizar como un archivo "csv"',
     },
-    dialog: {
-      importTo: 'Importar para',
-      dataFileReq: 'Requisitos del archivo',
-      extension: "Debe ser un archivo '.csv' o '.tsv'",
-      idColumnCreate: "No debe contener una columna 'id' para nuevo",
-      idColumnUpdate: "Debe contener una columna 'id' para sobrescribir",
-      chooseFile: 'Elija Archivo',
-      processed: 'Procesado',
-      rowCount: 'Cuenta de filas',
-      cancel: 'Cancelar',
-      importNew: 'Importar nuevo',
-      importOverride: 'Importar y sobrescribir ',
+    dialogCommon: {
+      subtitle: 'Importando% {count} elementos de% {fileName} a "% {resource}"',
+      conflictCount:
+      "El recurso <strong>% {resource} </strong> tiene <strong>% {conflictingCount} </strong> más registros con ID en conflicto",
+      buttons: {
+        cancel: "Cancelar",
+      }
     },
+    dialogImport: {
+      alertClose: "Importado% {fname}",
+      title: 'Importando a "% {resource}"',
+      buttons: {
+        replaceAllConflicts: "Reemplazar las filas",
+        skipAllConflicts: "Salta estas filas",
+        letmeDecide: "Déjame decidir por cada fila",
+      },
+    },
+    dialogDecide: {
+      title: 'Importando id% {id} a "% {resource}"',
+      buttons: {
+        replaceRow: "Reemplazar el id de fila =% {id}",
+        addAsNewRow: "Agregar como nueva fila (no reemplazar)",
+        skipDontReplace: "Omitir esta fila (no reemplazar)",
+      },
+    },
+    loading: "Cargando...",
   },
 };

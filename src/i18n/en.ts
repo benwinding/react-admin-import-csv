@@ -30,13 +30,10 @@ export default {
     },
     dialogDecide: {
       title: 'Importing id %{id} to "%{resource}"',
-      conflictCount:
-        "The resource <strong>%{resource}</strong> has <strong>%{conflictingCount}</strong> more records with conflicting ids",
       buttons: {
         replaceRow: "Replace the row id=%{id}",
         addAsNewRow: "Add as new row (Don't replace)",
         skipDontReplace: "Skip this row (Don't replace)",
-        cancel: "Cancel",
       },
     },
     loading: "Loading...",
