@@ -172,7 +172,7 @@ export const ImportButton = (props: any) => {
   const notify = useNotify();
   const handleClose = () => {
     resetVars();
-    notify(translate("csv.alert.imported", {fname: fileName}));
+    notify(translate("csv.alert.imported", { fname: fileName }));
     refresh();
   };
 
@@ -204,17 +204,18 @@ export const ImportButton = (props: any) => {
     nextConflicting();
     setOpenAskDecide(true);
   };
-  
+
   const nextConflicting = () => {
     const currentId = Array.isArray(idsConflicting) && idsConflicting.pop();
     setIdsConflicting(idsConflicting);
-    const foundValue = Array.isArray(values) && values.filter((v) => v.id === currentId).pop();
+    const foundValue =
+      Array.isArray(values) && values.filter((v) => v.id === currentId).pop();
     logger.log("nextConflicting", { foundValue, currentId });
     const isLast = !foundValue;
     if (!isLast) {
       setCurrentValue(foundValue);
     }
-    return foundValue && {...foundValue};
+    return foundValue && { ...foundValue };
   };
 
   const handleAskDecideReplace = async () => {
@@ -223,7 +224,7 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    await updateRows([val])
+    await updateRows([val]);
   };
 
   const handleAskDecideAddAsNew = async () => {
@@ -232,8 +233,8 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    delete val.id
-    await createRows([val])
+    delete val.id;
+    await createRows([val]);
   };
 
   const handleAskDecideSkip = async () => {
@@ -242,7 +243,7 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    createRows([val])
+    createRows([val]);
   };
 
   const handleAskDecideSkipAll = async () => {
@@ -284,7 +285,7 @@ export const ImportButton = (props: any) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Importing to {resourceName}
+          {translate("csv.status.importToResource", { resource: resourceName })}
         </DialogTitle>
         <DialogContent>
           <div style={{ width: "400px", maxWidth: "100%" }}>
@@ -298,8 +299,11 @@ export const ImportButton = (props: any) => {
                 color: "#555",
               }}
             >
-              Importing {values && values.length} items from '{fileName}' to{" "}
-              {resourceName}
+              {translate("csv.status.importToReosurceCount", {
+                count: values && values.length,
+                fileName: fileName,
+                resource: resourceName,
+              })}
             </p>
             {isLoading && (
               <div
@@ -315,32 +319,37 @@ export const ImportButton = (props: any) => {
                     fontFamily: "sans-serif",
                   }}
                 >
-                  Loading...
+                  {translate("csv.status.loading")}
                 </p>
               </div>
             )}
             {idsConflicting && idsConflicting.length > 0 && !isLoading && (
               <div>
-                <p style={{ fontFamily: "sans-serif", margin: "0" }}>
-                  The resource <strong>{resourceName}</strong> has{" "}
-                  <strong>{idsConflicting && idsConflicting.length}</strong>{" "}
-                  records with the same Ids
-                </p>
+                <p
+                  style={{ fontFamily: "sans-serif", margin: "0" }}
+                  dangerouslySetInnerHTML={{
+                    __html: translate("csv.status.importConflictingCount", {
+                      resource: resourceName,
+                      conflictingCount:
+                        idsConflicting && idsConflicting.length + 1,
+                    }),
+                  }}
+                ></p>
                 <List>
                   <BtnOption
                     onClick={handleReplace}
                     icon={<Done htmlColor="#29c130" />}
-                    label="Replace the rows"
+                    label={translate("csv.button.replaceAllConflicts")}
                   />
                   <BtnOption
                     onClick={handleSkip}
                     icon={<FileCopy htmlColor="#3a88ca" />}
-                    label="Skip these rows"
+                    label={translate("csv.button.skipAllConflicts")}
                   />
                   <BtnOption
                     onClick={handleAskDecide}
                     icon={<Undo htmlColor="black" />}
-                    label="Let me decide for each row"
+                    label={translate("csv.button.letmeDecide")}
                   />
                 </List>
               </div>
@@ -356,7 +365,10 @@ export const ImportButton = (props: any) => {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          Importing id {currentValue && currentValue.id} to {resourceName}
+          {translate("csv.status.importId", {
+            id: currentValue && currentValue.id,
+            resource: resourceName,
+          })}
         </DialogTitle>
         <DialogContent>
           <div style={{ width: "400px", maxWidth: "100%" }}>
@@ -370,8 +382,11 @@ export const ImportButton = (props: any) => {
                 color: "#555",
               }}
             >
-              Importing {values && values.length} items from '{fileName}' to{" "}
-              {resourceName}
+              {translate("csv.status.importToReosurceCount", {
+                count: values && values.length,
+                fileName: fileName,
+                resource: resourceName,
+              })}
             </p>
             {isLoading && (
               <div
@@ -387,39 +402,44 @@ export const ImportButton = (props: any) => {
                     fontFamily: "sans-serif",
                   }}
                 >
-                  Loading...
+                  {translate("csv.status.loading")}
                 </p>
               </div>
             )}
             {!isLoading && (
               <div>
-                <p style={{ fontFamily: "sans-serif", margin: "0" }}>
-                  The resource <strong>{resourceName}</strong> has{" "}
-                  <strong>{idsConflicting && idsConflicting.length + 1}</strong>{" "}
-                  more records with conflicting ids
-                </p>
+                <p
+                  style={{ fontFamily: "sans-serif", margin: "0" }}
+                  dangerouslySetInnerHTML={{
+                    __html: translate("csv.status.importConflictingCount", {
+                      resource: resourceName,
+                      conflictingCount:
+                        idsConflicting && idsConflicting.length + 1,
+                    }),
+                  }}
+                ></p>
                 <List>
                   <BtnOption
                     onClick={handleAskDecideReplace}
                     icon={<Done htmlColor="#29c130" />}
-                    label={
-                      "Replace the row id=" + (currentValue && currentValue.id)
-                    }
+                    label={translate("csv.button.replaceRow", {
+                      id: currentValue && currentValue.id,
+                    })}
                   />
                   <BtnOption
                     onClick={handleAskDecideAddAsNew}
                     icon={<Add htmlColor="#3a88ca" />}
-                    label="Add as new row (Don't replace)"
+                    label={translate("csv.button.addAsNewRow")}
                   />
                   <BtnOption
                     onClick={handleAskDecideSkip}
                     icon={<Undo htmlColor="black" />}
-                    label="Skip this row (Don't replace)"
+                    label={translate("csv.button.skipDontReplace")}
                   />
                   <BtnOption
                     onClick={handleAskDecideSkipAll}
                     icon={<Clear htmlColor="#3a88ca" />}
-                    label="Cancel"
+                    label={translate("csv.button.cancel")}
                   />
                 </List>
               </div>
