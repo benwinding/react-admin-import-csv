@@ -54,10 +54,12 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: build-lib
+        path: lib
     - name: Download build-esm
       uses: actions/download-artifact@v2
       with:
         name: build-esm
+        path: esm
     - name: Deploy to NPM! 🚀
       uses: benwinding/merge-release@master
       env:
@@ -79,14 +81,6 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-    - name: Download build-lib
-      uses: actions/download-artifact@v2
-      with:
-        name: build-lib
-    - name: Download build-esm
-      uses: actions/download-artifact@v2
-      with:
-        name: build-esm
     - run: npm run-script build-for-demo
     - run: npm run-script build
       working-directory: ./demo
