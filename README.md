@@ -122,6 +122,15 @@ const config: ImportConfig = {
 <ImportButton {...props} {...config}/>
 ```
 
+## Reducing Requests with `createMany()`
+
+Your dataprovider will need to implement the `.createMany()` method in order to reduce requests to your backend. If it doesn't exist, it will fallback to calling `.create()` on all items, as shown below:
+
+| Name | Method | Fallback Method | 
+|---------|-----------|---------------------|
+| Creating from CSV | .createMany()  | .create()    |           
+| Updating from CSV | .updateMany()  | *- none -* |
+
 ## Translation `i18n`
 
 This package uses `react-admin`'s global i18n translation. Below is an example on how to set it up with this package.
