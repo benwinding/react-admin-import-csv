@@ -75,16 +75,26 @@ async function createInDataProvider(
   logger.log("addInDataProvider", { dataProvider, resource, values });
   const reportItems: ReportItem[] = [];
   try {
-    await dataProvider.createMany(resource, { data: values });
+    const response = await dataProvider.createMany(resource, { data: values });
+    reportItems.push({
+      value: null, success: true, response: response
+    })
   } catch (error) {
-    const shouldUseFallback = error.toString().includes("Unknown dataProvider");
-    if (shouldUseFallback) {
+    const shouldTryFallback = error.toString().includes("Unknown dataProvider");
+    const apiError = !shouldTryFallback;
+    if (apiError) {
+      reportItems.push({
+        value: null, err: error, success: false, response: null
+      })
+    }
+    if (shouldTryFallback) {
       logger.log(
         "addInDataProvider",
-        "createMany not found on provider: using fallback"
+        "createMany not found on data provider (you may need to implement it): using fallback instead"
       );
       try {
-        await createInDataProviderFallback(dataProvider, resource, values);
+        const items = await createInDataProviderFallback(dataProvider, resource, values);
+        reportItems.concat(items);
       } catch (error) {
         logger.error("addInDataProvider", error);
       }
@@ -97,16 +107,16 @@ async function createInDataProviderFallback(
   dataProvider: DataProvider,
   resource: string,
   values: any[]
-) {
+): Promise<ReportItem[]> {
   const reportItems: ReportItem[] = [];
   await Promise.all(
     values.map((value) =>
       dataProvider
         .create(resource, { data: value })
         .then((res) =>
-          reportItems.push({ value, success: true, response: res })
+          reportItems.push({ value: value, success: true, response: res })
         )
-        .catch((err) => reportItems.push({ value, success: false, err }))
+        .catch((err) => reportItems.push({ value, success: false, err: err }))
     )
   );
   return reportItems;
