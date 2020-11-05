@@ -38,6 +38,9 @@ const ListActions = (props) => {
         // throw new Error("AAAA");
       }
     },
+    postCommitCallback: reportItems => {
+      console.log('reportItems', {reportItems});
+    }
   };
   return (
     <TopToolbar className={className}>

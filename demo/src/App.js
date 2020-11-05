@@ -12,10 +12,10 @@ import * as domainMessages from "./build-watch/i18n";
 const App = () => {
   const dataProvider = fakeDataProvider({
     posts: [
-      { id: 0, title: "Hello, world!" },
       { id: 1, title: "FooBar" },
       { id: 2, title: "Another" },
       { id: 3, title: "Thing" },
+      { id: 4, title: "Hello, world!" },
     ],
   });
 
