@@ -94,7 +94,7 @@ async function createInDataProvider(
       );
       try {
         const items = await createInDataProviderFallback(dataProvider, resource, values);
-        reportItems.concat(items);
+        reportItems = reportItems.concat(items);
       } catch (error) {
         logger.error("addInDataProvider", error);
       }
