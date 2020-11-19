@@ -5,6 +5,7 @@ import {
   useNotify,
   useDataProvider,
   useTranslate,
+  resolveBrowserLocale,
 } from "react-admin";
 
 import {
@@ -29,6 +30,9 @@ import {
 } from "./import-controller";
 import { create, update } from "./uploader";
 
+import polyglotI18nProvider from "ra-i18n-polyglot";
+import * as messages from "./i18n";
+
 export const BtnOption = (props: any) => {
   return (
     <ListItem disableGutters={true}>
@@ -45,9 +49,28 @@ export const BtnOption = (props: any) => {
   );
 };
 
+const defaultI18nProvider = polyglotI18nProvider(
+  (locale) => (messages[locale] ? messages[locale] : messages.en),
+  resolveBrowserLocale()
+);
+
+export const useMyTranslate = () => {
+  const translateSystem = useTranslate();
+  const translate = (key: string, args?: any): string => {
+    args = args || {};
+    args._ = ""; // Hack to stop throwing error
+    const res = translateSystem(key, args);
+    if (res) {
+      return res;
+    }
+    return defaultI18nProvider.translate(key, args);
+  };
+  return translate;
+};
+
 export const ImportButton = (props: any) => {
   const refresh = useRefresh();
-  const translate = useTranslate();
+  const translate = useMyTranslate();
   const dataProvider = useDataProvider();
 
   const {
@@ -307,7 +330,9 @@ export const ImportButton = (props: any) => {
               <BtnOption
                 onClick={handleReplace}
                 icon={<Done htmlColor="#29c130" />}
-                label={translate("csv.dialogImport.buttons.replaceAllConflicts")}
+                label={translate(
+                  "csv.dialogImport.buttons.replaceAllConflicts"
+                )}
               />
               <BtnOption
                 onClick={handleSkip}
@@ -419,7 +444,8 @@ function MyDialog(props: {
 }
 
 function MyLoader() {
-  const translate = useTranslate();
+  const translate = useMyTranslate();
+
   return (
     <div
       style={{
