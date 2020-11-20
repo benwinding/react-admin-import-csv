@@ -10,6 +10,6 @@ export interface ImportConfig {
   validateRow?: ValidateRowFunction;
 };
 
-export type PrecommitCallback = (action: "create" | "overwrite", values: any[]) => any[];
+export type PrecommitCallback = (action: "create" | "overwrite", values: any[]) => Promise<any[]>;
 export type ValidateRowFunction = (csvRowItem: any) => Promise<void>;
 export type ErrorCallback = (error: any) => void;

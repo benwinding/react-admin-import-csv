@@ -13,7 +13,7 @@ export async function create(
   postCommitCallback: ErrorCallback
 ) {
   const parsedValues = preCommitCallback
-    ? preCommitCallback("create", values)
+    ? await preCommitCallback("create", values)
     : values;
   const reportItems = await createInDataProvider(
     logging,
@@ -40,7 +40,7 @@ export async function update(
   postCommitCallback: ErrorCallback
 ) {
   const parsedValues = preCommitCallback
-    ? preCommitCallback("create", values)
+    ? await preCommitCallback("create", values)
     : values;
   const reportItems = await updateInDataProvider(
     logging,

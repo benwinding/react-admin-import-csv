@@ -138,7 +138,7 @@ This package uses `react-admin`'s global i18n translation. Below is an example o
 Current supported languages (submit a PR if you'd like to add a language):
 - English (en)
 - Spanish (es)
-- Chinese (cn)
+- Chinese (zh)
 
 **Example (i18nProvider)**
 
@@ -155,7 +155,7 @@ const locale = useLocale() || resolveBrowserLocale();
 const messages = {
   // Delete languages you don't need
   en: { ...englishMessages, ...domainMessages.en },
-  cn: { ...chineseMessages, ...domainMessages.cn },
+  zh: { ...chineseMessages, ...domainMessages.zh },
   es: { ...spanishMessages, ...domainMessages.es },
 };
 // Create polyglot provider
