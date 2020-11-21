@@ -40,7 +40,7 @@ export async function update(
   postCommitCallback: ErrorCallback
 ) {
   const parsedValues = preCommitCallback
-    ? await preCommitCallback("create", values)
+    ? await preCommitCallback("overwrite", values)
     : values;
   const reportItems = await updateInDataProvider(
     logging,

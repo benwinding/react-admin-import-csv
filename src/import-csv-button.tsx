@@ -266,7 +266,6 @@ export const ImportButton = (props: any) => {
     if (!val) {
       return handleClose();
     }
-    createRows([val]);
   };
 
   const handleAskDecideSkipAll = async () => {
