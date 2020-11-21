@@ -45,7 +45,7 @@ export async function CheckCSVValidation(
     return;
   }
   try {
-    await Promise.all(csvValues.map((v) => validateRow(v)));
+    await Promise.all(csvValues.map(validateRow));
   } catch (error) {
     logger.error("onFileAdded", { csvValues }, error);
     throw translate("csv.parsing.failedValidateRow");
