@@ -11,5 +11,5 @@ export interface ImportConfig {
 };
 
 export type PrecommitCallback = (action: "create" | "overwrite", values: any[]) => any[];
-export type ValidateRowFunction = (csvRowItem: any) => Promise<void>;
+export type ValidateRowFunction = (csvRowItem: any, index?: any, allItems?: any[]) => Promise<void>;
 export type ErrorCallback = (error: any) => void;
