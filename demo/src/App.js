@@ -1,6 +1,6 @@
 // in src/App.js
 import React from "react";
-import { Admin, Resource, resolveBrowserLocale, useLocale } from "react-admin";
+import { Admin, Resource, resolveBrowserLocale } from "react-admin";
 import polyglotI18nProvider from "ra-i18n-polyglot";
 import fakeDataProvider from "ra-data-fakerest";
 import { PostList, PostShow, PostEdit, PostCreate } from "./posts";
@@ -20,15 +20,14 @@ const App = () => {
   });
 
   // Setup i18n
-  const locale = useLocale();
   const messages = {
     en: { ...englishMessages, ...domainMessages.en },
-    cn: { ...chineseMessages, ...domainMessages.cn },
+    zh: { ...chineseMessages, ...domainMessages.zh },
     es: { ...spanishMessages, ...domainMessages.es },
   };
   const i18nProvider = polyglotI18nProvider(
     (locale) => (messages[locale] ? messages[locale] : messages.en),
-    locale || resolveBrowserLocale()  
+    resolveBrowserLocale()  
   );
 
   return (
