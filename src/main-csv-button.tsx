@@ -53,7 +53,68 @@ export const MainCsvImport = (props: any) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [currentValue, setCurrentValue] = React.useState(null as any);
 
-  const [fileName, setFileName] = React.useState('');
+  const [file, setFile] = React.useState<File | null>();
+  const fileName = (file && file.name) + "";
+
+  React.useEffect(() => {
+    let mounted = true;
+    if (!file) {
+      setOpen(false);
+      return;
+    }
+    setOpen(true);
+    async function processCSV(): Promise<[any[], boolean]> {
+      // Is valid csv
+      if (!file) {
+        throw new Error("File not processed from input field");
+      }
+      logger.log("Parsing CSV file");
+      const csvItems = await GetCSVItems(logging, translate, file, parseConfig);
+      mounted && setValues(csvItems);
+      // Does CSV pass user validation
+      logger.log("Validating CSV file");
+      await CheckCSVValidation(logging, translate, csvItems, validateRow);
+      // Are there any import overwrites?
+      logger.log("Checking rows to import");
+      const collidingIds = await GetIdsColliding(
+        logging,
+        translate,
+        dataProvider,
+        csvItems,
+        resourceName
+      );
+      mounted && setIdsConflicting(collidingIds);
+      const hasCollidingIds = !!collidingIds.length;
+      logger.log("Has colliding ids?", { hasCollidingIds, collidingIds });
+      if (!hasCollidingIds) {
+        return [csvItems, hasCollidingIds];
+      }
+      // Ask Replace X Rows? Skip these rows? Decied For Each?
+      const collindingIdsSet = new Set(collidingIds.map((id) => id));
+      const csvItemsNotColliding = csvItems.filter(
+        (item) => !collindingIdsSet.has(item.id)
+      );
+      logger.log("Importing items which arent colliding", {
+        csvItemsNotColliding,
+      });
+      return [csvItemsNotColliding, hasCollidingIds];
+    }
+
+    processCSV()
+      .then(async ([csvItems, hasCollidingIds]) => {
+        await createRows(csvItems);
+        mounted && !hasCollidingIds && handleClose();
+      })
+      .catch((error) => {
+        mounted && resetVars();
+        logger.error(error);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, [file]);
+
   let refInput: HTMLInputElement;
 
   function resetVars() {
@@ -62,7 +123,7 @@ export const MainCsvImport = (props: any) => {
     setValues([]);
     setIdsConflicting([]);
     setIsLoading(false);
-    setFileName('');
+    setFile(null);
   }
 
   async function createRows(vals: any[]) {
@@ -93,59 +154,16 @@ export const MainCsvImport = (props: any) => {
     refInput.click();
   }
 
-  const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onFileAdded = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    setFileName((file && file.name ) || '');
-    setOpen(true);
-    try {
-      // Is valid csv
-      if (!file) {
-        throw new Error('File not processed from input field');
-      }
-      logger.log("Parsing CSV file");
-      const csvItems = await GetCSVItems(logging, translate, file, parseConfig);
-      setValues(csvItems);
-      // Does CSV pass user validation
-      logger.log("Validating CSV file");
-      await CheckCSVValidation(logging, translate, csvItems, validateRow);
-      // Are there any import overwrites?
-      logger.log("Checking rows to import");
-      const collidingIds = await GetIdsColliding(
-        logging,
-        translate,
-        dataProvider,
-        csvItems,
-        resourceName
-      );
-      setIdsConflicting(collidingIds);
-      const hasCollidingIds = !!collidingIds.length;
-      logger.log("Is has colliding ids?", { hasCollidingIds, collidingIds });
-      if (hasCollidingIds) {
-        // Ask Replace X Rows? Skip these rows? Decied For Each?
-        const collindingIdsSet = new Set(collidingIds.map((id) => id));
-        const csvItemsNotColliding = csvItems.filter(
-          (item) => !collindingIdsSet.has(item.id)
-        );
-        logger.log("Importing items which arent colliding", {
-          csvItemsNotColliding,
-        });
-        await createRows(csvItemsNotColliding);
-      } else {
-        await createRows(csvItems);
-        handleClose();
-      }
-      // Begin Import
-    } catch (error) {
-      resetVars();
-      logger.error(error);
-    }
+    setFile(file);
   };
 
   const notify = useNotify();
   const handleClose = () => {
+    console.log("handleClose", { file });
     resetVars();
-    const message = translate("csv.dialogImport.alertClose", { fname: fileName });
-    notify(message);
+    notify(translate("csv.dialogImport.alertClose", { fname: fileName }));
     refresh();
   };
 
