@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8d93155568be91fbf979db5284db2bee",
+    "revision": "c82f286add6177a66808c7b740b24892",
     "url": "/react-admin-import-csv/index.html"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/react-admin-import-csv/static/js/2.38af494e.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "87de0726a0eb82b9b049",
-    "url": "/react-admin-import-csv/static/js/main.d5d08793.chunk.js"
+    "revision": "7767b4a780f7433fd151",
+    "url": "/react-admin-import-csv/static/js/main.f1a38971.chunk.js"
   },
   {
     "revision": "9bfb3322ff1cec7823d3",
