@@ -12,16 +12,16 @@ export default {
       invalidCsv: 'El documento no se pudo analizar como un archivo "csv"',
     },
     dialogCommon: {
-      subtitle: 'Importando% {count} elementos de% {fileName} a "% {resource}"',
+      subtitle: 'Importando %{count} elementos de %{fileName} a "%{resource}"',
       conflictCount:
-      "El recurso <strong>% {resource} </strong> tiene <strong>% {conflictingCount} </strong> más registros con ID en conflicto",
+      "El recurso <strong> %{resource} </strong> tiene <strong> %{conflictingCount} </strong> más registros con ID en conflicto",
       buttons: {
         cancel: "Cancelar",
       }
     },
     dialogImport: {
-      alertClose: "Importado% {fname}",
-      title: 'Importando a "% {resource}"',
+      alertClose: "Importado %{fname}",
+      title: 'Importando a "%{resource}"',
       buttons: {
         replaceAllConflicts: "Reemplazar las filas",
         skipAllConflicts: "Salta estas filas",
@@ -29,9 +29,9 @@ export default {
       },
     },
     dialogDecide: {
-      title: 'Importando id% {id} a "% {resource}"',
+      title: 'Importando id %{id} a "%{resource}"',
       buttons: {
-        replaceRow: "Reemplazar el id de fila =% {id}",
+        replaceRow: "Reemplazar el id de fila = %{id}",
         addAsNewRow: "Agregar como nueva fila (no reemplazar)",
         skipDontReplace: "Omitir esta fila (no reemplazar)",
       },

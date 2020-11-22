@@ -12,16 +12,16 @@ export default {
       invalidCsv: '该文档无法解析为“csv”文件',
     },
     dialogCommon: {
-      subtitle: '将％{count}个项目从％{fileName}导入到“％{resource}”',
+      subtitle: '将%{count}个项目从%{fileName}导入到“%{resource}”',
       conflictCount:
-      "资源<strong>％{resource}</strong>的ID冲突的记录还有<strong>％{conflictingCount}</strong>个记录",
+      "资源<strong>%{resource}</strong>的ID冲突的记录还有<strong>%{conflictingCount}</strong>个记录",
       buttons: {
         cancel: "取消",
       }
     },
     dialogImport: {
-      alertClose: "导入的％{fname}",
-      title: '导入到“％{resource}”',
+      alertClose: "导入的%{fname}",
+      title: '导入到“%{resource}”',
       buttons: {
         replaceAllConflicts: "替换行",
         skipAllConflicts: "跳过这些行",
@@ -29,9 +29,9 @@ export default {
       },
     },
     dialogDecide: {
-      title: '将ID％{id}导入“％{resource}”',
+      title: '将ID%{id}导入“%{resource}”',
       buttons: {
-        replaceRow: "替换行id=％{id}",
+        replaceRow: "替换行id=%{id}",
         addAsNewRow: "添加为新行（请勿替换）",
         skipDontReplace: "跳过此行（请勿替换）",
       },
