@@ -9,8 +9,8 @@ export async function create(
   dataProvider: DataProvider,
   resource: string,
   values: any[],
-  preCommitCallback: PrecommitCallback,
-  postCommitCallback: ErrorCallback
+  preCommitCallback?: PrecommitCallback,
+  postCommitCallback?: ErrorCallback
 ) {
   const parsedValues = preCommitCallback
     ? await preCommitCallback("create", values)
@@ -36,8 +36,8 @@ export async function update(
   dataProvider: DataProvider,
   resource: string,
   values: any[],
-  preCommitCallback: PrecommitCallback,
-  postCommitCallback: ErrorCallback
+  preCommitCallback?: PrecommitCallback,
+  postCommitCallback?: ErrorCallback
 ) {
   const parsedValues = preCommitCallback
     ? await preCommitCallback("overwrite", values)

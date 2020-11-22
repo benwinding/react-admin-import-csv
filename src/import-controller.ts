@@ -38,7 +38,7 @@ export async function CheckCSVValidation(
   logging: boolean,
   translate: Translate,
   csvValues: any[],
-  validateRow: ValidateRowFunction
+  validateRow?: ValidateRowFunction
 ): Promise<void> {
   const logger = makeLogger(logging);
   if (!validateRow) {
@@ -59,10 +59,10 @@ export async function GetCSVItems(
   parseConfig: any,
 ): Promise<any[]> {
   const logger = makeLogger(logging);
-  let csvValues: any[];
+  let csvValues: any[] | undefined;
   try {
-    const csvValues = await processCsvFile(file, parseConfig);
-    return csvValues;
+    csvValues = await processCsvFile(file, parseConfig);
+    return csvValues || [];
   } catch (error) {
     logger.error("onFileAdded", { csvValues }, error);
     throw translate("csv.parsing.invalidCsvDocument");

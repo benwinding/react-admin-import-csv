@@ -6,7 +6,7 @@ import GetAppIcon from "@material-ui/icons/GetApp";
 import { translateWrapper } from "../translateWrapper";
 
 interface ImportButtonProps {
-  variant: string;
+  variant: "text" | "outlined" | "contained";
   label: string;
   clickImportButton: () => any;
   onFileAdded: (e: React.ChangeEvent<HTMLInputElement>) => any;

@@ -20,12 +20,12 @@ export const MainCsvImport = (props: any) => {
   const dataProvider = useDataProvider();
 
   const {
-    logging,
     parseConfig,
     preCommitCallback,
     postCommitCallback,
     validateRow,
   } = props as ImportConfig;
+  const logging = !!props.logging;
   let { variant, label, resource, resourceName } = props;
   const logger = new SimpleLogger("import-csv-button", true);
   logger.setEnabled(logging);
@@ -48,21 +48,21 @@ export const MainCsvImport = (props: any) => {
 
   const [open, setOpen] = React.useState(false);
   const [openAskDecide, setOpenAskDecide] = React.useState(false);
-  const [values, setValues] = React.useState(null as any[]);
-  const [idsConflicting, setIdsConflicting] = React.useState(null as any[]);
-  const [isLoading, setIsLoading] = React.useState(null as boolean);
+  const [values, setValues] = React.useState([] as any[]);
+  const [idsConflicting, setIdsConflicting] = React.useState([] as any[]);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [currentValue, setCurrentValue] = React.useState(null as any);
 
-  const [fileName, setFileName] = React.useState(null as string);
+  const [fileName, setFileName] = React.useState('');
   let refInput: HTMLInputElement;
 
   function resetVars() {
     setOpen(false);
     setOpenAskDecide(false);
-    setValues(null);
-    setIdsConflicting(null);
-    setIsLoading(null);
-    setFileName(null);
+    setValues([]);
+    setIdsConflicting([]);
+    setIsLoading(false);
+    setFileName('');
   }
 
   async function createRows(vals: any[]) {
@@ -95,10 +95,13 @@ export const MainCsvImport = (props: any) => {
 
   const onFileAdded = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    setFileName(file.name);
+    setFileName((file && file.name ) || '');
     setOpen(true);
     try {
       // Is valid csv
+      if (!file) {
+        throw new Error('File not processed from input field');
+      }
       logger.log("Parsing CSV file");
       const csvItems = await GetCSVItems(logging, translate, file, parseConfig);
       setValues(csvItems);

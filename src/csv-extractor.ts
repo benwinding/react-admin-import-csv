@@ -58,7 +58,7 @@ export function processCsvData(data: string[][]): any[] {
     return dataRows;
   }
   else {
-    const dataRows = [];
+    const dataRows: any[] = [];
     data.forEach( (obj) => {
         let value: any = {}
         for (let key in obj) value = setObjectValue(value, key, obj[key]);
