@@ -26,7 +26,11 @@ const App = () => {
     es: { ...spanishMessages, ...domainMessages.es },
   };
   const i18nProvider = polyglotI18nProvider(
-    (locale) => (messages[locale] ? messages[locale] : messages.en),
+    (locale) => {
+      const localeMessages = messages[locale] ? messages[locale] : messages.en;
+      console.log('i18nProvider: polyglotI18nProvider', {locale, localeMessages});
+      return localeMessages;
+    },
     resolveBrowserLocale()  
   );
 

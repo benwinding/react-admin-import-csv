@@ -47,7 +47,7 @@
     "ra-language-chinese": "^2.0.5",
     "ra-language-spanish": "1.x",
     "react": "16.8.6",
-    "react-admin": "3.x",
+    "react-admin": "3.10.x",
     "react-dom": "16.8.3",
     "react-scripts": "^3.4.3",
     "source-map-loader": "^0.2.4",
