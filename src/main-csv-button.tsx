@@ -92,7 +92,7 @@ export const MainCsvImport = (props: any) => {
       // Ask Replace X Rows? Skip these rows? Decied For Each?
       const collindingIdsSet = new Set(collidingIds.map((id) => id));
       const csvItemsNotColliding = csvItems.filter(
-        (item) => !collindingIdsSet.has(item.id)
+        (item) => !collindingIdsSet.has(item.id + '')
       );
       logger.log("Importing items which arent colliding", {
         csvItemsNotColliding,
