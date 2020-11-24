@@ -90,10 +90,20 @@ export const MainCsvImport = (props: any) => {
         return [csvItems, hasCollidingIds];
       }
       // Ask Replace X Rows? Skip these rows? Decied For Each?
-      const collindingIdsSet = new Set(collidingIds.map((id) => id));
-      const csvItemsNotColliding = csvItems.filter(
-        (item) => !collindingIdsSet.has(item.id)
-      );
+      const collidingIdsStringsSet = new Set(collidingIds.map((id) => id+''));
+      const collidingIdsNumbersSet = new Set();
+
+      const collidingIdsAsNumbers = collidingIds.map((id) => parseFloat(id+''));
+      const allCollidingIdsAreNumbers = collidingIdsAsNumbers.every(id => isFinite(id));
+      if (allCollidingIdsAreNumbers) {
+        collidingIdsAsNumbers.map(id => collidingIdsNumbersSet.add(id))        
+      }
+      function idNotInNumbersOrStrings(item: any) {
+        const matchesIdString = !collidingIdsStringsSet.has(item.id+'')
+        const matchesIdNumber = !collidingIdsNumbersSet.has(+item.id)
+        return matchesIdNumber || matchesIdString;
+      }
+      const csvItemsNotColliding = csvItems.filter(idNotInNumbersOrStrings);
       logger.log("Importing items which arent colliding", {
         csvItemsNotColliding,
       });
@@ -172,9 +182,9 @@ export const MainCsvImport = (props: any) => {
     try {
       setIsLoading(true);
       await new Promise((res) => setTimeout(res, 1000));
-      const collindingIdsSet = new Set(idsConflicting.map((id) => id));
+      const collidingIdsSet = new Set(idsConflicting.map((id) => id));
       const valuesColliding = values.filter((item) =>
-        collindingIdsSet.has(item.id)
+        collidingIdsSet.has(item.id)
       );
       await updateRows(valuesColliding);
       handleClose();

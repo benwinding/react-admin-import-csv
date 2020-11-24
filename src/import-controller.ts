@@ -1,4 +1,4 @@
-import { Translate, DataProvider } from "ra-core";
+import { Translate, DataProvider, Identifier } from "ra-core";
 import { processCsvFile } from "./csv-extractor";
 import { SimpleLogger } from "./SimpleLogger";
 import { ValidateRowFunction } from "./config.interface";
@@ -15,18 +15,18 @@ export async function GetIdsColliding(
   dataProvider: DataProvider,
   csvValues: any[],
   resourceName: string,
-): Promise<string[]> {
+): Promise<Identifier[]> {
   const logger = makeLogger(logging);
   const hasIds = csvValues.some((v) => v.id);
   if (!hasIds) {
     return [];
   }
   try {
-    const ids: string[] = csvValues.filter(v => !!v.id).map((v) => v.id+'');
+    const csvIds: Identifier[] = csvValues.filter(v => !!v.id).map((v) => v.id);
     const recordsColliding = await dataProvider.getMany(resourceName, {
-      ids: ids,
+      ids: csvIds,
     });
-    const recordIdsColliding = recordsColliding.data.map((r) => r.id + '' as string);
+    const recordIdsColliding = recordsColliding.data.map((r) => r.id);
     return recordIdsColliding;
   } catch (error) {
     logger.error("GetIdsColliding", { csvValues }, error);
