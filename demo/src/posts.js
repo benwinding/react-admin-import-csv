@@ -52,7 +52,7 @@ const ListActions = (props) => {
         filter={filterValues}
         exporter={exporter}
       />
-      <ImportButton {...props} {...config} />
+      <ImportButton {...props} {...config} parseConfig={{dynamicTyping: true}}/>
     </TopToolbar>
   );
 };

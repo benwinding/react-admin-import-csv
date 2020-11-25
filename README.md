@@ -109,7 +109,7 @@ const config: ImportConfig = {
   // Disable "import overwrite" button 
   disableImportOverwrite?: boolean;
   // A function to translate the CSV rows on import 
-  preCommitCallback?: (action: "create" | "overwrite", values: any[]) => any[];
+  preCommitCallback?: (action: "create" | "overwrite", values: any[]) => Promise<any[]>;
   // A function to handle row errors after import
   postCommitCallback?: (error: any) => void;
   // Async function to Validate a row, reject the promise if it's not valid
