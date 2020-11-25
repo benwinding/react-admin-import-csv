@@ -116,10 +116,23 @@ const config: ImportConfig = {
   validateRow?: (csvRowItem: any) => Promise<void>;
   // Any option from the "papaparse" library 
   parseConfig?: {
-    // SEE: https://www.papaparse.com/docs#config
+    // For all options see: https://www.papaparse.com/docs#config
   }
 }
 <ImportButton {...props} {...config}/>
+```
+
+## Handle `id` fields which might be numbers
+
+Use the `paparse` configuration option [`dynamicTyping`](https://www.papaparse.com/docs)
+
+``` js
+const importOptions = {
+  parseConfig?: {
+    // For all options see: https://www.papaparse.com/docs#config
+    dynamicTyping: true
+  }
+}
 ```
 
 ## Reducing Requests with `createMany()`
