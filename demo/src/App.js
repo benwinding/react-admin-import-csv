@@ -7,7 +7,7 @@ import { PostList, PostShow, PostEdit, PostCreate } from "./posts";
 import englishMessages from "ra-language-english";
 import spanishMessages from "ra-language-spanish";
 import chineseMessages from "ra-language-chinese";
-import * as domainMessages from "./build-watch/i18n";
+import {i18n as domainMessages} from "./build-watch";
 
 const App = () => {
   const dataProvider = fakeDataProvider({
