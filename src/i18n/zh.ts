@@ -14,16 +14,16 @@ export default {
     dialogCommon: {
       subtitle: '将%{count}个项目从%{fileName}导入到“%{resource}”',
       conflictCount:
-      "资源<strong>%{resource}</strong>的ID冲突的记录还有<strong>%{conflictingCount}</strong>个记录",
+      "与资源<strong>%{resource}</strong>的ID冲突的记录还有<strong>%{conflictingCount}</strong>个",
       buttons: {
         cancel: "取消",
       }
     },
     dialogImport: {
-      alertClose: "导入的%{fname}",
+      alertClose: "已导入%{fname}",
       title: '导入到“%{resource}”',
       buttons: {
-        replaceAllConflicts: "替换行",
+        replaceAllConflicts: "替换所有行",
         skipAllConflicts: "跳过这些行",
         letmeDecide: "让我为每一行决定",
       },
