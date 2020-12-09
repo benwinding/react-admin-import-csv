@@ -7,6 +7,7 @@ import { Done, Undo, FileCopy } from "@material-ui/icons";
 import { SharedDialogButton } from "./SharedDialogButton";
 
 interface ImportCsvDialogStrategyProps {
+  disableImportOverwrite: boolean;
   resourceName: string;
   fileName: string;
   count: number;
@@ -32,6 +33,7 @@ interface MessageState {
 export const ImportCsvDialogStrategy = (props: ImportCsvDialogStrategyProps) => {
   const {
     count,
+    disableImportOverwrite,
     resourceName,
     fileName,
     handleClose,
@@ -84,6 +86,7 @@ export const ImportCsvDialogStrategy = (props: ImportCsvDialogStrategyProps) => 
           ></p>
           <List>
             <SharedDialogButton
+              disabled={disableImportOverwrite}
               onClick={handleReplace}
               icon={<Done htmlColor="#29c130" />}
               label={messages.labelReplace}

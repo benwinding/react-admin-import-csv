@@ -40,7 +40,9 @@ const ListActions = (props) => {
     },
     postCommitCallback: reportItems => {
       console.log('reportItems', {reportItems});
-    }
+    },
+    // disableImportNew: true,
+    // disableImportOverwrite: true,
   };
   return (
     <TopToolbar className={className}>

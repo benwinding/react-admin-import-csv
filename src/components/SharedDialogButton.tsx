@@ -1,10 +1,16 @@
 import React from "react";
 import { Button, ListItem } from "@material-ui/core";
 
-export function SharedDialogButton(props: any) {
+export function SharedDialogButton(props: {
+  onClick: () => void;
+  icon: React.ReactElement;
+  label: string;
+  disabled?: boolean;
+}) {
   return (
     <ListItem disableGutters={true}>
       <Button
+        disabled={props.disabled}
         style={{ width: "100%", backgroundColor: "#efefef", padding: "13px" }}
         onClick={props.onClick}
       >

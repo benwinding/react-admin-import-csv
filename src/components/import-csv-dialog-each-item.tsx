@@ -7,6 +7,8 @@ import { List } from "@material-ui/core";
 import { Done, Undo, Clear, Add } from "@material-ui/icons";
 
 interface ImportCsvDialogEachItemProps {
+  disableImportNew: boolean;
+  disableImportOverwrite: boolean;
   currentValue: any;
   resourceName: string;
   values: any[];
@@ -23,6 +25,8 @@ interface ImportCsvDialogEachItemProps {
 
 export const ImportCsvDialogEachItem = (props: ImportCsvDialogEachItemProps) => {
   const {
+    disableImportNew,
+    disableImportOverwrite,
     currentValue,
     resourceName,
     values,
@@ -66,6 +70,7 @@ export const ImportCsvDialogEachItem = (props: ImportCsvDialogEachItemProps) => 
           ></p>
           <List>
             <SharedDialogButton
+              disabled={disableImportOverwrite}
               onClick={handleAskDecideReplace}
               icon={<Done htmlColor="#29c130" />}
               label={translate("csv.dialogDecide.buttons.replaceRow", {
@@ -73,6 +78,7 @@ export const ImportCsvDialogEachItem = (props: ImportCsvDialogEachItemProps) => 
               })}
             />
             <SharedDialogButton
+              disabled={disableImportNew}
               onClick={handleAskDecideAddAsNew}
               icon={<Add htmlColor="#3a88ca" />}
               label={translate("csv.dialogDecide.buttons.addAsNewRow")}

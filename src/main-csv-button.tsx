@@ -24,7 +24,12 @@ export const MainCsvImport = (props: any) => {
     preCommitCallback,
     postCommitCallback,
     validateRow,
+    disableImportNew,
+    disableImportOverwrite,
   } = props as ImportConfig;
+  const disableNew = !!disableImportNew;
+  const disableOverwrite = !!disableImportOverwrite;
+
   const logging = !!props.logging;
   let { variant, label, resource, resourceName } = props;
   const logger = new SimpleLogger("import-csv-button", true);
@@ -264,6 +269,7 @@ export const MainCsvImport = (props: any) => {
 
       {/* IMPORT DIALOG */}
       <ImportCsvDialogStrategy
+        disableImportOverwrite={disableOverwrite}
         resourceName={resourceName}
         fileName={fileName}
         count={values && values.length}
@@ -277,6 +283,8 @@ export const MainCsvImport = (props: any) => {
       />
       {/* IMPORT ASK DECIDE */}
       <ImportCsvDialogEachItem
+        disableImportNew={disableNew}
+        disableImportOverwrite={disableOverwrite}
         currentValue={currentValue}
         resourceName={resourceName}
         values={values}
