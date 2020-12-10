@@ -24,6 +24,7 @@ export const MainCsvImport = (props: any) => {
     preCommitCallback,
     postCommitCallback,
     validateRow,
+    transformRows,
     disableImportNew,
     disableImportOverwrite,
   } = props as ImportConfig;
@@ -74,7 +75,8 @@ export const MainCsvImport = (props: any) => {
         throw new Error("File not processed from input field");
       }
       logger.log("Parsing CSV file");
-      const csvItems = await GetCSVItems(logging, translate, file, parseConfig);
+      const csvRows = await GetCSVItems(logging, translate, file, parseConfig);
+      const csvItems = transformRows ? await transformRows(csvRows) : csvRows
       mounted && setValues(csvItems);
       // Does CSV pass user validation
       logger.log("Validating CSV file");
