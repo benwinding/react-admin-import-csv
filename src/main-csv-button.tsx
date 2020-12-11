@@ -106,9 +106,9 @@ export const MainCsvImport = (props: any) => {
         collidingIdsAsNumbers.map(id => collidingIdsNumbersSet.add(id))        
       }
       function idNotInNumbersOrStrings(item: any) {
-        const matchesIdString = !collidingIdsStringsSet.has(item.id+'')
-        const matchesIdNumber = !collidingIdsNumbersSet.has(+item.id)
-        return matchesIdNumber || matchesIdString;
+        const matchesIdString = collidingIdsStringsSet.has(item.id+'')
+        const matchesIdNumber = collidingIdsNumbersSet.has(+item.id)
+        return !(matchesIdNumber || matchesIdString);
       }
       const csvItemsNotColliding = csvItems.filter(idNotInNumbersOrStrings);
       logger.log("Importing items which arent colliding", {
