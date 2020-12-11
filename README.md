@@ -112,6 +112,8 @@ const config: ImportConfig = {
   preCommitCallback?: (action: "create" | "overwrite", values: any[]) => Promise<any[]>;
   // A function to handle row errors after import
   postCommitCallback?: (error: any) => void;
+  // Transform rows before anything is sent to dataprovider
+  transformRows?: (csvRows: any[]) => Promise<any[]>;
   // Async function to Validate a row, reject the promise if it's not valid
   validateRow?: (csvRowItem: any) => Promise<void>;
   // Any option from the "papaparse" library 
