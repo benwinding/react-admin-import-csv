@@ -7,6 +7,7 @@ export interface ImportConfig {
   disableImportOverwrite?: boolean;
   preCommitCallback?: PrecommitCallback;
   postCommitCallback?: ErrorCallback;
+  transformRows?: (csvRows: any[]) => Promise<any[]>;
   validateRow?: ValidateRowFunction;
 };
 
