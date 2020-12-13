@@ -155,6 +155,7 @@ Current supported languages (submit a PR if you'd like to add a language):
 - Spanish (es)
 - Chinese (zh)
 - German (de) 
+- French (fr) 
 
 **Example (i18nProvider)**
 
