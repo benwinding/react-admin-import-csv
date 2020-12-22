@@ -137,14 +137,28 @@ const importOptions = {
 }
 ```
 
-## Reducing Requests with `createMany()`
+## Reducing Requests
 
-Your dataprovider will need to implement the `.createMany()` method in order to reduce requests to your backend. If it doesn't exist, it will fallback to calling `.create()` on all items, as shown below:
+Your dataprovider will need to implement the `.createMany()` method in order to reduce requests to your backend. If it doesn't exist, it will fallback to calling `.create()` on all items, as shown below (same goes for `.update()`):
 
-| Name | Method | Fallback Method | 
+| Name | Special Method | Fallback Method | 
 |---------|-----------|---------------------|
 | Creating from CSV | .createMany()  | .create()    |           
-| Updating from CSV | .updateMany()  | *- none -* |
+| Updating from CSV | .updateManyArray()  | .update() |
+
+### Interfaces
+
+The dataprovider should accept these param interfaces for the bulk create/update methods.
+
+``` typescript
+export interface UpdateManyArrayParams {
+  ids: Identifier[];
+  data: any[];
+}
+export interface CreateManyParams {
+  data: any[];
+}
+```
 
 ## Translation `i18n`
 

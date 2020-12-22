@@ -72,7 +72,7 @@ async function createInDataProvider(
   values: any[]
 ): Promise<ReportItem[]> {
   logger.setEnabled(logging);
-  logger.log("addInDataProvider", { dataProvider, resource, values });
+  logger.log("createInDataProvider", { dataProvider, resource, values });
   const reportItems: ReportItem[] = [];
   try {
     const response = await dataProvider.createMany(resource, { data: values });
@@ -89,14 +89,14 @@ async function createInDataProvider(
     }
     if (shouldTryFallback) {
       logger.log(
-        "addInDataProvider",
-        "createMany not found on data provider (you may need to implement it): using fallback instead"
+        "createInDataProvider",
+        "createMany not found on data provider (you may need to implement it see: https://github.com/benwinding/react-admin-import-csv#reducing-requests): using fallback instead"
       );
       try {
         const items = await createInDataProviderFallback(dataProvider, resource, values);
         reportItems.push(...items);
       } catch (error) {
-        logger.error("addInDataProvider", error);
+        logger.error("createInDataProvider", error);
       }
     }
   }
@@ -138,11 +138,50 @@ async function updateInDataProvider(
     ids,
   });
   const reportItems: ReportItem[] = [];
-  await dataProvider
-    .updateMany(resource, { ids: ids, data: values })
-    .then((res) =>
-      reportItems.push({ value: values, success: true, response: res })
+  try {
+    const response = await dataProvider.updateManyArray(resource, { ids: ids, data: values });
+    reportItems.push({
+      value: null, success: true, response: response
+    })
+  } catch (error) {
+    const shouldTryFallback = error.toString().includes("Unknown dataProvider");
+    const apiError = !shouldTryFallback;
+    if (apiError) {
+      reportItems.push({
+        value: null, err: error, success: false, response: null
+      })
+    }
+    if (shouldTryFallback) {
+      logger.log(
+        "updateInDataProvider",
+        "updateManyArray not found on data provider (you may need to implement it see: https://github.com/benwinding/react-admin-import-csv#reducing-requests): using fallback instead"
+      );
+      try {
+        const items = await updateInDataProviderFallback(dataProvider, resource, values);
+        reportItems.push(...items);
+      } catch (error) {
+        logger.error("updateInDataProvider", error);
+      }
+    }
+  }
+  return reportItems;
+}
+
+async function updateInDataProviderFallback(
+  dataProvider: DataProvider,
+  resource: string,
+  values: any[]
+): Promise<ReportItem[]> {
+  const reportItems: ReportItem[] = [];
+  await Promise.all(
+    values.map((value) =>
+      dataProvider
+        .update(resource, { id: value.id, data: value, previousData: null as any })
+        .then((res) =>
+          reportItems.push({ value: value, success: true, response: res })
+        )
+        .catch((err) => reportItems.push({ value: value, success: false, err }))
     )
-    .catch((err) => reportItems.push({ value: values, success: false, err }));
+  );
   return reportItems;
 }
