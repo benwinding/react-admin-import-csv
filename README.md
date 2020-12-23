@@ -143,8 +143,8 @@ Your dataprovider will need to implement the `.createMany()` method in order to 
 
 | Name | Special Method | Fallback Method | 
 |---------|-----------|---------------------|
-| Creating from CSV | .createMany()  | .create()    |           
-| Updating from CSV | .updateManyArray()  | .update() |
+| Creating from CSV | .createMany() | .create()    |           
+| Updating from CSV | .updateManyArray() | .update() |
 
 ### Interfaces
 
