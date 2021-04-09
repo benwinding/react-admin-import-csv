@@ -16,11 +16,12 @@
   "main": "lib/index",
   "module": "esm/index.js",
   "scripts": {
-    "build": "yarn run build-cjs && yarn run build-esm",
+    "build": "yarn run build-cjs && yarn run build-esm && yarn run build-dts",
     "build-watch": "yarn build-for-demo -w",
     "build-for-demo": "rimraf ./demo/src/build-watch && tsc --outDir demo/src/build-watch",
     "build-cjs": "rimraf ./lib && tsc",
     "build-esm": "rimraf ./esm && tsc --outDir esm --module es2015",
+    "build-dts": "tsc -d --declarationDir lib/ --declarationMap --emitDeclarationOnly",
     "test": "jest --collectCoverage",
     "test:watch": "jest --watch",
     "test:silent": "npx jest 2>&1 | grep '●'",
