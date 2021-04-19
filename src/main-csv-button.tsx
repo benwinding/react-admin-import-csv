@@ -23,10 +23,13 @@ export const MainCsvImport = (props: any) => {
     parseConfig,
     preCommitCallback,
     postCommitCallback,
+    postValidateCallback,
     validateRow,
     transformRows,
     disableImportNew,
     disableImportOverwrite,
+    disableCollidingIdCheck,
+    disableRefreshOnValidationErrors,
   } = props as ImportConfig;
   const disableNew = !!disableImportNew;
   const disableOverwrite = !!disableImportOverwrite;
@@ -76,11 +79,17 @@ export const MainCsvImport = (props: any) => {
       }
       logger.log("Parsing CSV file");
       const csvRows = await GetCSVItems(logging, translate, file, parseConfig);
-      const csvItems = transformRows ? await transformRows(csvRows) : csvRows
+      const csvItems = transformRows ? await transformRows(csvRows) : csvRows;
       mounted && setValues(csvItems);
       // Does CSV pass user validation
       logger.log("Validating CSV file");
-      await CheckCSVValidation(logging, translate, csvItems, validateRow);
+      const validateOutput = await CheckCSVValidation(logging, translate, csvItems, validateRow);
+      if (postValidateCallback) {
+        await postValidateCallback(validateOutput, csvItems)
+      }
+      if (disableCollidingIdCheck) {
+        return [csvItems, false];
+      }
       // Are there any import overwrites?
       logger.log("Checking rows to import");
       const collidingIds = await GetIdsColliding(
@@ -178,7 +187,6 @@ export const MainCsvImport = (props: any) => {
 
   const notify = useNotify();
   const handleClose = () => {
-    console.log("handleClose", { file });
     resetVars();
     notify(translate("csv.dialogImport.alertClose", { fname: fileName }));
     refresh();
