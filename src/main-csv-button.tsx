@@ -29,7 +29,6 @@ export const MainCsvImport = (props: any) => {
     disableImportNew,
     disableImportOverwrite,
     disableCollidingIdCheck,
-    disableRefreshOnValidationErrors,
   } = props as ImportConfig;
   const disableNew = !!disableImportNew;
   const disableOverwrite = !!disableImportOverwrite;
