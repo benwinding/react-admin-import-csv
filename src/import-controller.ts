@@ -39,13 +39,13 @@ export async function CheckCSVValidation(
   translate: Translate,
   csvValues: any[],
   validateRow?: ValidateRowFunction
-): Promise<void> {
+): Promise<any[]> {
   const logger = makeLogger(logging);
   if (!validateRow) {
-    return;
+    return [];
   }
   try {
-    await Promise.all(csvValues.map(validateRow));
+    return await Promise.all(csvValues.map(validateRow)) || [];
   } catch (error) {
     logger.error("onFileAdded", { csvValues }, error);
     throw translate("csv.parsing.failedValidateRow");
