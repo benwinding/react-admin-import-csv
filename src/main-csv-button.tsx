@@ -228,21 +228,22 @@ export const MainCsvImport = (props: any) => {
 
   const handleAskDecideReplace = async () => {
     logger.log("handleAskDecideReplace");
+    await updateRows([currentValue]);
     const val = nextConflicting();
     if (!val) {
       return handleClose();
     }
-    await updateRows([val]);
   };
 
   const handleAskDecideAddAsNew = async () => {
     logger.log("handleAskDecideAddAsNew");
+    const localCopy = Object.assign({},currentValue)
+    delete localCopy.id;
+    await createRows([localCopy]);
     const val = nextConflicting();
     if (!val) {
       return handleClose();
     }
-    delete val.id;
-    await createRows([val]);
   };
 
   const handleAskDecideSkip = async () => {
