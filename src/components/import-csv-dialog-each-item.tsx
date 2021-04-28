@@ -64,7 +64,7 @@ export const ImportCsvDialogEachItem = (props: ImportCsvDialogEachItemProps) => 
             dangerouslySetInnerHTML={{
               __html: translate("csv.dialogCommon.conflictCount", {
                 resource: resourceName,
-                conflictingCount: idsConflicting && idsConflicting.length + 1,
+                conflictingCount: idsConflicting && idsConflicting.length,
               }),
             }}
           ></p>

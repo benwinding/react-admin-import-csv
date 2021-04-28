@@ -63,7 +63,7 @@ export const ImportCsvDialogStrategy = (props: ImportCsvDialogStrategyProps) => 
       labelDecide: translate("csv.dialogImport.buttons.letmeDecide"),
       messageHtml: translate("csv.dialogCommon.conflictCount", {
         resource: resourceName,
-        conflictingCount: idsConflicting && idsConflicting.length + 1,
+        conflictingCount: idsConflicting && idsConflicting.length,
       }),
     });
   }, [count, resourceName, fileName, idsConflicting]);
