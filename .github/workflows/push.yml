@@ -7,7 +7,6 @@ name: Build and Publish
 jobs:
   build:
     name: Build Library
-    if: "contains(github.event.head_commit.message, 'ci-deploy')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -38,7 +37,6 @@ jobs:
   deploy:
     needs: build
     name: Deploy Library
-    if: "contains(github.event.head_commit.message, 'ci-deploy')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -69,7 +67,6 @@ jobs:
   demo:
     needs: build
     name: Deploy Demo
-    if: "contains(github.event.head_commit.message, 'ci-deploy')"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
