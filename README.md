@@ -140,7 +140,7 @@ const importOptions = {
 }
 ```
 
-## Reducing Requests
+## Reducing Requests (`.createMany()` and `.updateMany()`)
 
 Your dataprovider will need to implement the `.createMany()` method in order to reduce requests to your backend. If it doesn't exist, it will fallback to calling `.create()` on all items, as shown below (same goes for `.update()`):
 
@@ -161,6 +161,30 @@ export interface UpdateManyArrayParams {
 export interface CreateManyParams {
   data: any[];
 }
+```
+
+### Example Implementation
+
+Here's a quick example of how to implement `.createMany()` and `.updateMany()` in your dataprovider:
+
+``` js
+// Must be react-admin 3.x
+const dataProviderWrapped = {
+  ...dataProvider, // <- Your data provider
+  createMany: async (resource, params) => {
+    const items = params.data;
+    // Handle create many here
+  },
+  updateMany: async (resource, params) => {
+    const items = params.data;
+    const idsToUpdate = params.ids;
+    // Handle update many here
+  }
+}
+
+// Pass into to other parts of the system as normal
+return (
+  <Admin dataProvider={dataProviderWrapped}
 ```
 
 ## Translation `i18n`
