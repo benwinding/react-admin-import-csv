@@ -11,7 +11,7 @@
 
 <!-- [END badges] -->
 
-CSV import button for react-admin.
+CSV import button for the [react-admin](https://github.com/marmelab/react-admin) framework.
 
 ![image](https://user-images.githubusercontent.com/11782590/93659721-83622e00-fa87-11ea-90c4-650aecf60a6a.gif)
 
