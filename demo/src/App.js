@@ -5,6 +5,7 @@ import polyglotI18nProvider from "ra-i18n-polyglot";
 import fakeDataProvider from "ra-data-fakerest";
 import { PostList, PostShow, PostEdit, PostCreate } from "./posts";
 import englishMessages from "ra-language-english";
+import russianMessages from "ra-language-russian";
 import spanishMessages from "ra-language-spanish";
 import chineseMessages from "ra-language-chinese";
 import {i18n as domainMessages} from "./build-watch";
@@ -22,6 +23,7 @@ const App = () => {
   // Setup i18n
   const messages = {
     en: { ...englishMessages, ...domainMessages.en },
+    ru: { ...russianMessages, ...domainMessages.ru },
     zh: { ...chineseMessages, ...domainMessages.zh },
     es: { ...spanishMessages, ...domainMessages.es },
   };
