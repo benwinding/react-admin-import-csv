@@ -198,6 +198,7 @@ Current supported languages (submit a PR if you'd like to add a language):
 - Chinese (zh)
 - German (de)
 - French (fr)
+- Russian (ru)
 
 **Example (i18nProvider)**
 
