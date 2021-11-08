@@ -18,11 +18,11 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-    - run: npm install
+    - run: yarn install --pure-lockfile
       if: steps.cache-modules.outputs.cache-hit != 'true'
-    - run: npm run-script build
-    - run: npm run-script test
-    - run: npm run-script test:badges
+    - run: yarn build
+    - run: yarn test
+    - run: yarn test:badges
     - name: Upload esm build artifact
       uses: actions/upload-artifact@v2
       with:
@@ -78,8 +78,8 @@ jobs:
       with:
         path: node_modules
         key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
-    - run: npm run-script build-for-demo
-    - run: npm run-script build
+    - run: yarn build-for-demo
+    - run: yarn build
       working-directory: ./demo
     - name: Deploy 🚀
       if: github.ref == 'refs/heads/master'

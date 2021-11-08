@@ -3,6 +3,8 @@ dist
 esm
 lib
 yarn*
+!yarn.lock
 coverage/*
 !coverage/badge-lines.svg
 !coverage/coverage-summary.json
+package-lock*
