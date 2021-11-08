@@ -180,7 +180,7 @@ export const MainCsvImport = (props: any) => {
   const handleClose = () => {
     console.log("handleClose", { file });
     resetVars();
-    notify(translate("csv.dialogImport.alertClose", { fname: fileName }));
+    notify(translate("csv.dialogImport.alertClose", { fname: fileName }), {type: 'info'});
     refresh();
   };
 
