@@ -200,6 +200,7 @@ Current supported languages (submit a PR if you'd like to add a language):
 - French (fr)
 - Brazilian Portuguese (ptBR)
 - Russian (ru)
+- Dutch (nl)
 
 **Example (i18nProvider)**
 
