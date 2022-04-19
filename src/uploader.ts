@@ -6,6 +6,7 @@ let logger = new SimpleLogger("uploader", false);
 
 export async function create(
   logging: boolean,
+  disableCreateMany: boolean | undefined,
   dataProvider: DataProvider,
   resource: string,
   values: any[],
@@ -17,6 +18,7 @@ export async function create(
     : values;
   const reportItems = await createInDataProvider(
     logging,
+    !!disableCreateMany,
     dataProvider,
     resource,
     parsedValues
@@ -33,6 +35,7 @@ export async function create(
 
 export async function update(
   logging: boolean,
+  disableUpdateMany: boolean | undefined,
   dataProvider: DataProvider,
   resource: string,
   values: any[],
@@ -44,6 +47,7 @@ export async function update(
     : values;
   const reportItems = await updateInDataProvider(
     logging,
+    !!disableUpdateMany,
     dataProvider,
     resource,
     parsedValues
@@ -67,6 +71,7 @@ interface ReportItem {
 
 export async function createInDataProvider(
   logging: boolean,
+  disableCreateMany: boolean,
   dataProvider: DataProvider,
   resource: string,
   values: any[]
@@ -74,6 +79,11 @@ export async function createInDataProvider(
   logger.setEnabled(logging);
   logger.log("createInDataProvider", { dataProvider, resource, values });
   const reportItems: ReportItem[] = [];
+  if (disableCreateMany) {
+    const items = await createInDataProviderFallback(dataProvider, resource, values);
+    reportItems.push(...items);
+    return items;
+  }
   try {
     const response = await dataProvider.createMany(resource, { data: values });
     reportItems.push({
@@ -128,6 +138,7 @@ async function createInDataProviderFallback(
 
 async function updateInDataProvider(
   logging: boolean,
+  disableUpdateMany: boolean,
   dataProvider: DataProvider,
   resource: string,
   values: any[]
@@ -141,6 +152,10 @@ async function updateInDataProvider(
     logging,
     ids,
   });
+  if (disableUpdateMany) {
+    const items = await createInDataProviderFallback(dataProvider, resource, values);
+    return items;
+  }
   const reportItems: ReportItem[] = [];
   try {
     const response = await dataProvider.updateManyArray(resource, { ids: ids, data: values });
