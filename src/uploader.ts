@@ -65,7 +65,7 @@ interface ReportItem {
   response?: any;
 }
 
-async function createInDataProvider(
+export async function createInDataProvider(
   logging: boolean,
   dataProvider: DataProvider,
   resource: string,
@@ -80,7 +80,11 @@ async function createInDataProvider(
       value: null, success: true, response: response
     })
   } catch (error) {
-    const shouldTryFallback = error.toString().includes("Unknown dataProvider");
+    const providerMethodNotFoundErrors = [
+      "Unknown dataProvider",
+      "createMany",
+    ];
+    const shouldTryFallback = doesErrorContainString(error, providerMethodNotFoundErrors);
     const apiError = !shouldTryFallback;
     if (apiError) {
       reportItems.push({
@@ -144,7 +148,11 @@ async function updateInDataProvider(
       value: null, success: true, response: response
     })
   } catch (error) {
-    const shouldTryFallback = error.toString().includes("Unknown dataProvider");
+    const providerMethodNotFoundErrors = [
+      "Unknown dataProvider",
+      "updateMany",
+    ];
+    const shouldTryFallback = doesErrorContainString(error, providerMethodNotFoundErrors);
     const apiError = !shouldTryFallback;
     if (apiError) {
       reportItems.push({
@@ -184,4 +192,10 @@ async function updateInDataProviderFallback(
     )
   );
   return reportItems;
+}
+
+function doesErrorContainString(error: any, stringsToCheck: string[]): boolean {
+  const errorString = (!!error && typeof error === 'object' && error?.toString()) || '';
+  const shouldTryFallback = stringsToCheck.some(stringToCheck => errorString.includes(stringToCheck));
+  return shouldTryFallback;
 }
