@@ -107,8 +107,10 @@ export const PostList = (props) => (
 const config: ImportConfig = {
   // Enable logging
   logging?: boolean;
-  // Disable the attempt to use "createMany" and "updateMany", will instead just use "create" and "update" calls
-  disableCreateOrUpdateMany?: boolean,
+  // Disable the attempt to use "createMany", will instead just use "create" calls
+  disableCreateMany?: boolean,
+  // Disable the attempt to use "updateMany", will instead just use "update" calls
+  disableUpdateMany?: boolean,
   // Disable "import new" button
   disableImportNew?: boolean;
   // Disable "import overwrite" button
@@ -151,7 +153,7 @@ Your dataprovider will need to implement the `.createMany()` method in order to 
 | Creating from CSV | .createMany()      | .create()       |
 | Updating from CSV | .updateManyArray() | .update()       |
 
-*Note: You can disable this feature using: `disableCreateOrUpdateMany: true` in the configuration.*
+*Note: You can disable this feature setting `disableCreateMany: true` or `disableUpdateMany: true` in the configuration.*
 ### Interfaces
 
 The dataprovider should accept these param interfaces for the bulk create/update methods.

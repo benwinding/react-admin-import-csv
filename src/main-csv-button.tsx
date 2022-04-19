@@ -25,7 +25,8 @@ export const MainCsvImport = (props: any) => {
     postCommitCallback,
     validateRow,
     transformRows,
-    disableCreateOrUpdateMany,
+    disableCreateMany,
+    disableUpdateMany,
     disableImportNew,
     disableImportOverwrite,
   } = props as ImportConfig;
@@ -147,7 +148,7 @@ export const MainCsvImport = (props: any) => {
   async function createRows(vals: any[]) {
     return create(
       logging,
-      disableCreateOrUpdateMany,
+      disableCreateMany,
       dataProvider,
       resourceName,
       vals,
@@ -159,7 +160,7 @@ export const MainCsvImport = (props: any) => {
   async function updateRows(vals: any[]) {
     return update(
       logging,
-      disableCreateOrUpdateMany,
+      disableUpdateMany,
       dataProvider,
       resourceName,
       vals,

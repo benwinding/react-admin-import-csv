@@ -3,7 +3,8 @@ import { ParseConfig } from "papaparse";
 export interface ImportConfig {
   logging?: boolean;
   parseConfig?: ParseConfig;
-  disableCreateOrUpdateMany?: boolean;
+  disableCreateMany?: boolean;
+  disableUpdateMany?: boolean;
   disableImportNew?: boolean;
   disableImportOverwrite?: boolean;
   preCommitCallback?: PrecommitCallback;
