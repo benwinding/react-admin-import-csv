@@ -65,7 +65,7 @@ interface ReportItem {
   response?: any;
 }
 
-async function createInDataProvider(
+export async function createInDataProvider(
   logging: boolean,
   dataProvider: DataProvider,
   resource: string,
