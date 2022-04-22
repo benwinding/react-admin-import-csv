@@ -56,3 +56,11 @@ describe("csv extractor", () => {
     expect(output).toHaveLength(6)
   });
 });
+
+describe('processCsvData', () => {
+  test('should parse with blank column', () => {
+    // papaparse returns null for 0-char columns
+    const testData = [[null, "test"], [null, "value"]];
+    expect(processCsvData(testData)).toEqual([{"": null, "test": "value"}]);
+  })
+});
