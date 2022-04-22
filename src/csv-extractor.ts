@@ -3,7 +3,7 @@ import lensPath from "ramda/src/lensPath";
 import over from "ramda/src/over";
 
 const setObjectValue = (object: any, path: string, value: any): any => {
-  const lensPathFunction = lensPath(path.split("."));
+  const lensPathFunction = lensPath((!!path ? path+'' : '').split("."));
   return over(lensPathFunction, () => value, object || {});
 };
 
