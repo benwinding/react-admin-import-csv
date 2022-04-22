@@ -2,7 +2,9 @@ import { parse as convertFromCSV, ParseConfig } from "papaparse";
 import lensPath from "ramda/src/lensPath";
 import over from "ramda/src/over";
 
-const setObjectValue = (object: any, path: string, value: any): any => {
+type PapaString = string | null | number;
+
+const setObjectValue = (object: any, path: PapaString, value: any): any => {
   const lensPathFunction = lensPath((!!path ? path+'' : '').split("."));
   return over(lensPathFunction, () => value, object || {});
 };
@@ -27,7 +29,7 @@ export async function getCsvData(
   if (isObject) {
     config = inputConfig;
   }
-  return new Promise<string[][]>((resolve, reject) =>
+  return new Promise<PapaString[][]>((resolve, reject) =>
     convertFromCSV(file, {
       // Defaults
       delimiter: ",",
@@ -41,10 +43,10 @@ export async function getCsvData(
   );
 }
 
-export function processCsvData(data: string[][]): any[] {
+export function processCsvData(data: PapaString[][]): any[] {
 
   if (Array.isArray(data[0])) {
-    const topRowKeys: string[] = data[0];
+    const topRowKeys: PapaString[] = data[0];
 
     const dataRows = data.slice(1).map((row) => {
       let value: any = {};
