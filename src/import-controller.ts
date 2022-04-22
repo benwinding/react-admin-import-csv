@@ -47,7 +47,7 @@ export async function CheckCSVValidation(
   try {
     await Promise.all(csvValues.map(validateRow));
   } catch (error) {
-    logger.error("onFileAdded", { csvValues }, error);
+    logger.error("CheckCSVValidation", { csvValues }, error);
     throw translate("csv.parsing.failedValidateRow");
   }
 }
@@ -64,7 +64,7 @@ export async function GetCSVItems(
     csvValues = await processCsvFile(file, parseConfig);
     return csvValues || [];
   } catch (error) {
-    logger.error("onFileAdded", { csvValues }, error);
+    logger.error("GetCSVItems", { csvValues }, error);
     throw translate("csv.parsing.invalidCsvDocument");
   }
 }
