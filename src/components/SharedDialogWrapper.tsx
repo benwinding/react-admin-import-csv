@@ -4,7 +4,7 @@ import {
 
   DialogContent,
   DialogTitle
-} from "@material-ui/core";
+} from "@mui/material";
 
 export function SharedDialogWrapper(props: {
   open: boolean;

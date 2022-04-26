@@ -37,7 +37,7 @@ export async function getCsvData(
       // Configs (overwrites)
       ...config,
       // Callbacks
-      complete: (result) => resolve(result.data),
+      complete: (result) => resolve(result.data as PapaString[][]),
       error: (error) => reject(error),
     })
   );

@@ -3,8 +3,8 @@ import { SharedDialogButton } from "./SharedDialogButton";
 import { SharedDialogWrapper } from "./SharedDialogWrapper";
 import { SharedLoader } from "./SharedLoader";
 import { translateWrapper } from "../translateWrapper";
-import { List } from "@material-ui/core";
-import { Done, Undo, Clear, Add } from "@material-ui/icons";
+import { List } from "@mui/material";
+import { Done, Undo, Clear, Add } from "@mui/icons-material";
 
 interface ImportCsvDialogEachItemProps {
   disableImportNew: boolean;
