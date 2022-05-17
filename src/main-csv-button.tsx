@@ -27,6 +27,7 @@ export const MainCsvImport = (props: any) => {
     transformRows,
     disableCreateMany,
     disableUpdateMany,
+    disableGetMany,
     disableImportNew,
     disableImportOverwrite,
   } = props as ImportConfig;
@@ -90,7 +91,8 @@ export const MainCsvImport = (props: any) => {
         translate,
         dataProvider,
         csvItems,
-        resourceName
+        resourceName,
+        disableGetMany,
       );
       mounted && setIdsConflicting(collidingIds);
       const hasCollidingIds = !!collidingIds.length;

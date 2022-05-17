@@ -43,6 +43,7 @@ const ListActions = (props) => {
     },
     // disableImportNew: true,
     // disableImportOverwrite: true,
+    // disableGetMany: true,
   };
   return (
     <TopToolbar className={className}>
