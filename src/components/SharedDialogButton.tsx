@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, ListItem } from "@material-ui/core";
+import { Button, ListItem } from "@mui/material";
 
 export function SharedDialogButton(props: {
   onClick: () => void;

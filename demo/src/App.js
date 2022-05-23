@@ -8,7 +8,7 @@ import englishMessages from "ra-language-english";
 import russianMessages from "ra-language-russian";
 import spanishMessages from "ra-language-spanish";
 import chineseMessages from "ra-language-chinese";
-import {i18n as domainMessages} from "./build-watch";
+import {i18n as domainMessages} from "react-admin-import-csv";
 
 const App = () => {
   const dataProvider = fakeDataProvider({

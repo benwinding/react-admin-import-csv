@@ -18,7 +18,7 @@ import {
 } from "react-admin";
 
 // Change this import to: from "react-admin-import-csv"
-import { ImportButton } from "./build-watch";
+import { ImportButton } from "react-admin-import-csv";
 import { CreateButton, ExportButton } from "ra-ui-materialui";
 
 const ListActions = (props) => {

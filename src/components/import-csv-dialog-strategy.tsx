@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { SharedDialogWrapper } from "./SharedDialogWrapper";
 import { SharedLoader } from "./SharedLoader";
 import { translateWrapper } from "../translateWrapper";
-import { List } from "@material-ui/core";
-import { Done, Undo, FileCopy } from "@material-ui/icons";
+import { List } from "@mui/material";
+import { Done, Undo, FileCopy } from "@mui/icons-material";
 import { SharedDialogButton } from "./SharedDialogButton";
 
 interface ImportCsvDialogStrategyProps {
