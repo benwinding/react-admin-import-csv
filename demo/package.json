@@ -2,7 +2,7 @@
   "name": "test-ra",
   "version": "1.0.0",
   "scripts": {
-    "start": "PORT=4455 yarn --check-files && ../node_modules/.bin/react-scripts start"
+    "start": "yarn --check-files && PORT=4455 GENERATE_SOURCEMAP=true ../node_modules/.bin/react-scripts start"
   },
   "homepage": "http://benwinding.github.io/react-admin-import-csv",
   "browserslist": {
@@ -16,8 +16,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "dependencies": {
-    "react-admin-import-csv": "file:.."
   }
 }
