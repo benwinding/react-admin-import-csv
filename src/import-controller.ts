@@ -63,8 +63,8 @@ export async function IsIdColliding(
   resourceName: string,
 ) {
   return dataProvider.getOne(resourceName, {id})
-    .then(_ => undefined)
-    .catch(_ => id);
+    .then(_ => id)
+    .catch(_ => undefined);
 }
 
 export async function GetIdsCollidingGetMany(
