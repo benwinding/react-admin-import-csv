@@ -48,14 +48,14 @@ const ListActions = (props) => {
   };
   return (
     <TopToolbar className={className}>
-      {/* <CreateButton basePath={basePath} />
+      <CreateButton basePath={basePath} />
       <ExportButton
         disabled={total === 0}
         resource={resource}
         sort={currentSort}
         filter={filterValues}
         exporter={exporter}
-      /> */}
+      />
       <ImportButton {...props} {...config} parseConfig={{dynamicTyping: true}}/>
     </TopToolbar>
   );
