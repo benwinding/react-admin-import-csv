@@ -1,5 +1,5 @@
 import React from "react";
-import { useRefresh, useNotify, useDataProvider } from "react-admin";
+import {useRefresh, useNotify, useDataProvider, useResourceContext} from "react-admin";
 
 import { ImportConfig } from "./config.interface";
 import { SimpleLogger } from "./SimpleLogger";
@@ -18,6 +18,7 @@ export const MainCsvImport = (props: any) => {
   const refresh = useRefresh();
   const translate = translateWrapper();
   const dataProvider = useDataProvider();
+  const resource = useResourceContext();
 
   const {
     parseConfig,
@@ -27,6 +28,7 @@ export const MainCsvImport = (props: any) => {
     transformRows,
     disableCreateMany,
     disableUpdateMany,
+    disableGetMany,
     disableImportNew,
     disableImportOverwrite,
   } = props as ImportConfig;
@@ -34,7 +36,7 @@ export const MainCsvImport = (props: any) => {
   const disableOverwrite = !!disableImportOverwrite;
 
   const logging = !!props.logging;
-  let { variant, label, resource, resourceName } = props;
+  let { variant, label, resourceName } = props;
   const logger = new SimpleLogger("import-csv-button", true);
   logger.setEnabled(logging);
 
@@ -90,7 +92,8 @@ export const MainCsvImport = (props: any) => {
         translate,
         dataProvider,
         csvItems,
-        resourceName
+        resourceName,
+        disableGetMany,
       );
       mounted && setIdsConflicting(collidingIds);
       const hasCollidingIds = !!collidingIds.length;

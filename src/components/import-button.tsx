@@ -2,7 +2,7 @@ import React from "react";
 import { Button as RAButton } from "react-admin";
 
 import { Tooltip } from "@mui/material";
-import { GetApp as GetAppIcon }  from "@mui/icons-material";
+import GetAppIcon from "@mui/icons-material/GetApp";
 import { translateWrapper } from "../translateWrapper";
 
 interface ImportButtonProps {

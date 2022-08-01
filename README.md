@@ -111,6 +111,8 @@ const config: ImportConfig = {
   disableCreateMany?: boolean,
   // Disable the attempt to use "updateMany", will instead just use "update" calls
   disableUpdateMany?: boolean,
+  // Disable the attempt to use "getMany", will instead just use "getSingle" calls
+  disableGetMany?: boolean,
   // Disable "import new" button
   disableImportNew?: boolean;
   // Disable "import overwrite" button
@@ -152,6 +154,7 @@ Your dataprovider will need to implement the `.createMany()` method in order to 
 | ----------------- | ------------------ | --------------- |
 | Creating from CSV | .createMany()      | .create()       |
 | Updating from CSV | .updateManyArray() | .update()       |
+| Checking which exist | .getMany() | .getSingle()       |
 
 *Note: You can disable this feature setting `disableCreateMany: true` or `disableUpdateMany: true` in the configuration.*
 ### Interfaces

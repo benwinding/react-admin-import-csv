@@ -7,6 +7,8 @@ export interface ImportConfig {
   disableCreateMany?: boolean,
   // Disable the attempt to use "updateMany", will instead just use "update" calls
   disableUpdateMany?: boolean,
+  // Disable the attempt to use "getMany", will instead just use "getOne" calls
+  disableGetMany?: boolean,
   // Disable "import new" button
   disableImportNew?: boolean;
   // Disable "import overwrite" button
