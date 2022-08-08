@@ -1,6 +1,6 @@
 import { parse as convertFromCSV, ParseConfig } from "papaparse";
-import lensPath from "ramda/src/lensPath";
-import over from "ramda/src/over";
+import lensPath from "ramda/src/lensPath.js";
+import over from "ramda/src/over.js";
 
 type PapaString = string | null | number;
 
