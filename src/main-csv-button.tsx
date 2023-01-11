@@ -22,6 +22,7 @@ export const MainCsvImport = (props: any) => {
 
   const {
     parseConfig,
+    meta,
     preCommitCallback,
     postCommitCallback,
     validateRow,
@@ -108,7 +109,7 @@ export const MainCsvImport = (props: any) => {
       const collidingIdsAsNumbers = collidingIds.map((id) => parseFloat(id+''));
       const allCollidingIdsAreNumbers = collidingIdsAsNumbers.every(id => isFinite(id));
       if (allCollidingIdsAreNumbers) {
-        collidingIdsAsNumbers.map(id => collidingIdsNumbersSet.add(id))        
+        collidingIdsAsNumbers.map(id => collidingIdsNumbersSet.add(id))
       }
       function idNotInNumbersOrStrings(item: any) {
         const matchesIdString = collidingIdsStringsSet.has(item.id+'')
@@ -124,7 +125,7 @@ export const MainCsvImport = (props: any) => {
 
     processCSV()
       .then(async ([csvItems, hasCollidingIds]) => {
-        await createRows(csvItems);
+        await createRows(csvItems, meta);
         mounted && !hasCollidingIds && handleClose();
       })
       .catch((error) => {
@@ -148,25 +149,27 @@ export const MainCsvImport = (props: any) => {
     setFile(null);
   }
 
-  async function createRows(vals: any[]) {
+  async function createRows(vals: any[], meta?: any[]) {
     return create(
       logging,
       disableCreateMany,
       dataProvider,
       resourceName,
       vals,
+      meta,
       preCommitCallback,
       postCommitCallback
     );
   }
 
-  async function updateRows(vals: any[]) {
+  async function updateRows(vals: any[], meta?: any[]) {
     return update(
       logging,
       disableUpdateMany,
       dataProvider,
       resourceName,
       vals,
+      meta,
       preCommitCallback,
       postCommitCallback
     );
@@ -200,7 +203,7 @@ export const MainCsvImport = (props: any) => {
       const valuesColliding = values.filter((item) =>
         collidingIdsSet.has(item.id)
       );
-      await updateRows(valuesColliding);
+      await updateRows(valuesColliding, meta);
       handleClose();
     } catch (error) {
       setIsLoading(false);
@@ -235,7 +238,7 @@ export const MainCsvImport = (props: any) => {
 
   const handleAskDecideReplace = async () => {
     logger.log("handleAskDecideReplace");
-    await updateRows([currentValue]);
+    await updateRows([currentValue], meta);
     const val = nextConflicting();
     if (!val) {
       return handleClose();
@@ -246,7 +249,7 @@ export const MainCsvImport = (props: any) => {
     logger.log("handleAskDecideAddAsNew");
     const localCopy = Object.assign({},currentValue)
     delete localCopy.id;
-    await createRows([localCopy]);
+    await createRows([localCopy], meta);
     const val = nextConflicting();
     if (!val) {
       return handleClose();
