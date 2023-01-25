@@ -185,7 +185,7 @@ export const MainCsvImport = (props: any) => {
 
   const notify = useNotify();
   const handleClose = () => {
-    console.log("handleClose", { file });
+    logger.log("handleClose", { file });
     resetVars();
     notify(translate("csv.dialogImport.alertClose", { fname: fileName }), { type: 'info'});
     refresh();
