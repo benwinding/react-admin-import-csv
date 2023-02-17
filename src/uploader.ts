@@ -162,7 +162,7 @@ async function updateInDataProvider(
     ids,
   });
   if (disableUpdateMany) {
-    const items = await createInDataProviderFallback(dataProvider, resource, values, meta);
+    const items = await updateInDataProviderFallback(dataProvider, resource, values, meta);
     return items;
   }
   const reportItems: ReportItem[] = [];

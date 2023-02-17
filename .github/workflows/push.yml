@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
       with:
-        node-version: 10.17
+        node-version: 16.18.1
     - uses: actions/cache@v1
       id: cache-modules
       with:
@@ -43,7 +43,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
       with:
-        node-version: 10.17
+        node-version: 16.18.1
     - uses: actions/cache@v1
       id: cache-modules
       with:
@@ -73,7 +73,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: actions/setup-node@v1
       with:
-        node-version: 10.17
+        node-version: 16.18.1
     - uses: actions/cache@v1
       id: cache-modules
       with:
