@@ -23,7 +23,7 @@ export async function create(
     dataProvider,
     resource,
     parsedValues,
-      meta
+    meta
   );
   if (postCommitCallback) {
     postCommitCallback(reportItems);
@@ -162,7 +162,7 @@ async function updateInDataProvider(
     ids,
   });
   if (disableUpdateMany) {
-    const items = await updateInDataProviderFallback(dataProvider, resource, values, meta);
+    const items = await createInDataProviderFallback(dataProvider, resource, values, meta);
     return items;
   }
   const reportItems: ReportItem[] = [];
