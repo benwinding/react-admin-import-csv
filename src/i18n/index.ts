@@ -6,3 +6,4 @@ export { default as ptBR } from './ptBR';
 export { default as ru } from './ru';
 export { default as zh } from './zh';
 export { default as nl } from './nl';
+export { default as pl } from './pl';
