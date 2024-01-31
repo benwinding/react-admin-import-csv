@@ -29,7 +29,7 @@ export function SharedDialogWrapper(props: {
               margin: "0",
               fontSize: "0.9em",
               marginBottom: "10px",
-              marginTop: "-7px",
+              marginTop: "0px",
               color: "#555",
             }}
           >
