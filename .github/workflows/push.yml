@@ -60,7 +60,7 @@ jobs:
         name: build-esm
         path: esm
     - name: Deploy to NPM! 🚀
-      uses: benwinding/merge-release@master
+      uses: Github-Actions-Community/merge-release@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
