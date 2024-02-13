@@ -117,6 +117,8 @@ const config: ImportConfig = {
   disableImportNew?: boolean;
   // Disable "import overwrite" button
   disableImportOverwrite?: boolean;
+  // Provide metadata to dataProvider
+  meta?: any[];
   // A function to translate the CSV rows on import
   preCommitCallback?: (action: "create" | "overwrite", values: any[]) => Promise<any[]>;
   // A function to handle row errors after import
@@ -150,11 +152,11 @@ const importOptions = {
 
 Your dataprovider will need to implement the `.createMany()` method in order to reduce requests to your backend. If it doesn't exist, it will fallback to calling `.create()` on all items, as shown below (same goes for `.update()`):
 
-| Name              | Special Method     | Fallback Method |
-| ----------------- | ------------------ | --------------- |
-| Creating from CSV | .createMany()      | .create()       |
-| Updating from CSV | .updateManyArray() | .update()       |
-| Checking which exist | .getMany() | .getSingle()       |
+| Name                 | Special Method     | Fallback Method |
+|----------------------|--------------------|-----------------|
+| Creating from CSV    | .createMany()      | .create()       |
+| Updating from CSV    | .updateManyArray() | .update()       |
+| Checking which exist | .getMany()         | .getSingle()    |
 
 *Note: You can disable this feature setting `disableCreateMany: true` or `disableUpdateMany: true` in the configuration.*
 ### Interfaces

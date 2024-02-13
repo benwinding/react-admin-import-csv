@@ -10,6 +10,7 @@ export async function create(
   dataProvider: DataProvider,
   resource: string,
   values: any[],
+  meta?: any[],
   preCommitCallback?: PrecommitCallback,
   postCommitCallback?: ErrorCallback
 ) {
@@ -21,7 +22,8 @@ export async function create(
     !!disableCreateMany,
     dataProvider,
     resource,
-    parsedValues
+    parsedValues,
+    meta
   );
   if (postCommitCallback) {
     postCommitCallback(reportItems);
@@ -39,6 +41,7 @@ export async function update(
   dataProvider: DataProvider,
   resource: string,
   values: any[],
+  meta?: any[],
   preCommitCallback?: PrecommitCallback,
   postCommitCallback?: ErrorCallback
 ) {
@@ -50,7 +53,8 @@ export async function update(
     !!disableUpdateMany,
     dataProvider,
     resource,
-    parsedValues
+    parsedValues,
+    meta
   );
   if (postCommitCallback) {
     postCommitCallback(reportItems);
@@ -64,6 +68,7 @@ export async function update(
 
 interface ReportItem {
   value: any;
+  meta?: any[];
   success: boolean;
   err?: any;
   response?: any;
@@ -74,18 +79,19 @@ export async function createInDataProvider(
   disableCreateMany: boolean,
   dataProvider: DataProvider,
   resource: string,
-  values: any[]
+  values: any[],
+  meta?: any[]
 ): Promise<ReportItem[]> {
   logger.setEnabled(logging);
   logger.log("createInDataProvider", { dataProvider, resource, values });
   const reportItems: ReportItem[] = [];
   if (disableCreateMany) {
-    const items = await createInDataProviderFallback(dataProvider, resource, values);
+    const items = await createInDataProviderFallback(dataProvider, resource, values, meta);
     reportItems.push(...items);
     return items;
   }
   try {
-    const response = await dataProvider.createMany(resource, { data: values });
+    const response = await dataProvider.createMany(resource, { data: values, meta: meta });
     reportItems.push({
       value: null, success: true, response: response
     })
@@ -120,13 +126,14 @@ export async function createInDataProvider(
 async function createInDataProviderFallback(
   dataProvider: DataProvider,
   resource: string,
-  values: any[]
+  values: any[],
+  meta?: any[]
 ): Promise<ReportItem[]> {
   const reportItems: ReportItem[] = [];
   await Promise.all(
     values.map((value) =>
       dataProvider
-        .create(resource, { data: value })
+        .create(resource, { data: value, meta: meta })
         .then((res) =>
           reportItems.push({ value: value, success: true, response: res })
         )
@@ -141,7 +148,8 @@ async function updateInDataProvider(
   disableUpdateMany: boolean,
   dataProvider: DataProvider,
   resource: string,
-  values: any[]
+  values: any[],
+  meta?: any[]
 ) {
   const ids = values.map((v) => v.id);
   logger.setEnabled(logging);
@@ -149,16 +157,17 @@ async function updateInDataProvider(
     dataProvider,
     resource,
     values,
+    meta,
     logging,
     ids,
   });
   if (disableUpdateMany) {
-    const items = await updateInDataProviderFallback(dataProvider, resource, values);
+    const items = await updateInDataProviderFallback(dataProvider, resource, values, meta);
     return items;
   }
   const reportItems: ReportItem[] = [];
   try {
-    const response = await dataProvider.updateManyArray(resource, { ids: ids, data: values });
+    const response = await dataProvider.updateManyArray(resource, { ids: ids, data: values, meta: meta });
     reportItems.push({
       value: null, success: true, response: response
     })
@@ -193,13 +202,14 @@ async function updateInDataProvider(
 async function updateInDataProviderFallback(
   dataProvider: DataProvider,
   resource: string,
-  values: any[]
+  values: any[],
+  meta?: any[]
 ): Promise<ReportItem[]> {
   const reportItems: ReportItem[] = [];
   await Promise.all(
     values.map((value) =>
       dataProvider
-        .update(resource, { id: value.id, data: value, previousData: null as any })
+        .update(resource, { id: value.id, data: value, previousData: null as any, meta: meta })
         .then((res) =>
           reportItems.push({ value: value, success: true, response: res })
         )

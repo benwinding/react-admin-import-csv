@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES5",
-    "module": "commonjs",
-    "lib": ["es2017", "dom"],
+    "module": "esnext",
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "allowJs": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "declaration": true,
     "noImplicitAny": false,
@@ -14,8 +17,20 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "lib",
-    "rootDir": "src"
+    "rootDir": "src",
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
   },
-  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.spec.js", "./demo"],
-  "include": ["src"]
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "**/*.spec.js",
+    "./demo"
+  ],
+  "include": [
+    "src"
+  ]
 }

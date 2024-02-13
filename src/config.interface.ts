@@ -13,6 +13,8 @@ export interface ImportConfig {
   disableImportNew?: boolean;
   // Disable "import overwrite" button
   disableImportOverwrite?: boolean;
+  // Provide metadata to dataProvider
+  meta?: any[];
   // A function to translate the CSV rows on import
   preCommitCallback?: PrecommitCallback;
   // A function to handle row errors after import
