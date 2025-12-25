@@ -8,6 +8,7 @@ import {
   GetCSVItems,
   GetIdsColliding,
 } from "./import-controller";
+import { useTranslate } from "ra-core";
 import { create, update } from "./uploader";
 import { translateWrapper } from "./translateWrapper";
 import { ImportCsvDialogStrategy } from "./components/import-csv-dialog-strategy";
@@ -16,7 +17,7 @@ import { ImportButton } from "./components/import-button";
 
 export const MainCsvImport = (props: any) => {
   const refresh = useRefresh();
-  const translate = translateWrapper();
+  const translate = useTranslate();
   const dataProvider = useDataProvider();
   const resource = useResourceContext();
 
