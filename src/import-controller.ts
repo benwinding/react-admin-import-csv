@@ -1,4 +1,4 @@
-import { Translate, DataProvider, Identifier } from "ra-core";
+import { TranslateFunction , DataProvider, Identifier } from "ra-core";
 import { processCsvFile } from "./csv-extractor";
 import { SimpleLogger } from "./SimpleLogger";
 import { ValidateRowFunction } from "./config.interface";
@@ -11,7 +11,7 @@ function makeLogger(logging: boolean) {
 
 export async function GetIdsColliding(
   logging: boolean,
-  translate: Translate,
+  translate: TranslateFunction,
   dataProvider: DataProvider,
   csvValues: any[],
   resourceName: string,
@@ -37,7 +37,7 @@ export async function GetIdsColliding(
 
 export async function GetIdsCollidingGetSingle(
   logging: boolean,
-  translate: Translate,
+  translate: TranslateFunction,
   dataProvider: DataProvider,
   csvIds: Identifier[],
   resourceName: string,
@@ -69,7 +69,7 @@ export async function IsIdColliding(
 
 export async function GetIdsCollidingGetMany(
   logging: boolean,
-  translate: Translate,
+  translate: TranslateFunction,
   dataProvider: DataProvider,
   csvIds: Identifier[],
   resourceName: string,
@@ -89,7 +89,7 @@ export async function GetIdsCollidingGetMany(
 
 export async function CheckCSVValidation(
   logging: boolean,
-  translate: Translate,
+  translate: TranslateFunction,
   csvValues: any[],
   validateRow?: ValidateRowFunction
 ): Promise<void> {
@@ -107,7 +107,7 @@ export async function CheckCSVValidation(
 
 export async function GetCSVItems(
   logging: boolean,
-  translate: Translate,
+  translate: TranslateFunction,
   file: File,
   parseConfig: any,
 ): Promise<any[]> {
